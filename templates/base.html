@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>NYIT</title>
+    <link rel="stylesheet" href="/static/css/nav.css" >
+    <link rel="stylesheet" href="../static/css/base.css">
+    {% load bootstrap5 %}
+  {% bootstrap_css %}
+  {% bootstrap_javascript %}
+  </head>
+  <body>
+    {% include "nav.html" %}
+    {% block contain %} 
+    {% endblock contain %}
+
+
+      
+    
+  </body>
+</html>
