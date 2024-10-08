@@ -1,0 +1,7 @@
+.sidebar-container {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    top: 75px;
+    padding-top: 5px;
+}

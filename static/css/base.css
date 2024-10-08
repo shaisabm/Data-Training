@@ -1,4 +1,9 @@
 body {
-    padding-top: 80px;
+    padding-top: 75px;
+}
 
+body {
+    margin: 0;
+    padding-top: 75px;
+    padding-left: 300px;
 }
