@@ -1,0 +1,23 @@
+
+.nav-bar {
+    height: 75px;
+    width: 100%;
+    background-color: #002d72;
+
+}
+
+.nyit-logo-container {
+    position: fixed;
+    height: 75px;
+    width: 75px;
+
+}
+
+.nav-container {
+    position: fixed;
+    height: 75px;
+    width: 100%;
+    background-color: #002d72;
+    top: 0;
+    right: 0;
+}
