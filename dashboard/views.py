@@ -1,15 +1,20 @@
 
-from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
-from .forms import UploadFileForm
+import pandas as pd
+from dashboard.models import Registration
+from django.utils import timezone
+from .handle_uploads import registration_upload, participant_upload
 
 
 def home(request):
-    form = UploadFileForm()
     if request.method == "POST":
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            return HttpResponse("File uploaded successfully")
+        participant_files = request.FILES.getlist('participant_files')
+        registration_files = request.FILES.getlist('registration_files')
+        registration_upload.registration_upload(registration_files)
+        participant_upload.participant_upload(participant_files)
 
-    context = {'form': form}
-    return render(request, 'dashboard/home.html',context)
+
+
+
+
+    return render(request, 'dashboard/home.html', {})
