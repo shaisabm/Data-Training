@@ -4,17 +4,18 @@
 {% include 'sidebar.html'%}
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    <div class="uploads-container" >
+    <div class="uploads-container">
         <div class="uploads-sections mb-3">
-            <p class="fw-bold">Participant</p>
-            {{form.participant_file}}
-            <p class="fw-bold">Registration</p>
-            {{form.registration_file}}
+            <p class="fw-bold">Registrations</p>
+            <input class="form-control" type="file" name="registration_files" id="registration_files" multiple>
+            <p class="fw-bold">Participants</p>
+            <input class="form-control" type="file" name="participant_files" id="participant_files" multiple>
             <button type="submit" class="btn btn-primary">Submit</button>
         </div>
-
     </div>
 </form>
+
+{% include "registration-table.html" %}
 
 {% endblock contain %}
 
