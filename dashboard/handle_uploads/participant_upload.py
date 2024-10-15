@@ -25,18 +25,25 @@ def participant_upload(participant_files):
             duration = row.iloc[4]
             guest = row.iloc[5]
             in_waiting_room = row.iloc[6]
-
-            Participant.objects.update_or_create(
-                zoom_id=zoom_id,
-                email=email,
-                defaults={
-                    'event_name': event_name,
-                    'full_name': full_name,
-                    'joined_time': joined_time,
-                    'leave_time': leave_time,
-                    'duration': duration,
-                    'guest': guest == 'Yes',
-                    'in_waiting_room': in_waiting_room == 'Yes'
-                }
-            )
+            if duration < 5:
+                continue
+            if Participant.objects.filter(zoom_id=zoom_id, email=email).exists():
+                previous_participant = Participant.objects.filter(zoom_id=zoom_id, email=email).first()
+                if previous_participant.duration < duration:
+                    previous_participant.duration = duration
+                    previous_participant.save()
+            else:
+                Participant.objects.update_or_create(
+                    zoom_id=zoom_id,
+                    email=email,
+                    defaults={
+                        'event_name': event_name,
+                        'full_name': full_name,
+                        'joined_time': joined_time,
+                        'leave_time': leave_time,
+                        'duration': duration,
+                        'guest': guest == 'Yes',
+                        'in_waiting_room': in_waiting_room == 'Yes'
+                    }
+                )
 
