@@ -38,3 +38,9 @@ def home(request):
 
     context = {'registration_data_json': registration_data_json, 'participant_data_json': participant_data_json}
     return render(request, 'dashboard/home.html', context)
+
+def comparison(request):
+    return render(request, 'dashboard/comparison.html')
+
+def visualization(request):
+    return render(request, 'dashboard/visualization.html')
