@@ -24,14 +24,15 @@ def registration_upload(registration_files):
             date ,_= str((row.iloc[3])).split(" ")
             registration_time = date
             approval_status = row.iloc[4]
-            Registration.objects.update_or_create(
-                zoom_id=zoom_id,
-                email=email,
-                defaults={
-                    'event_name': event_name,
-                    'first_name': first_name,
-                    'last_name': last_name,
-                    'registration_time': registration_time,
-                    'approval_status': approval_status
-                }
-            )
+            if "@nyit.edu" in email:
+                Registration.objects.update_or_create(
+                    zoom_id=zoom_id,
+                    email=email,
+                    defaults={
+                        'event_name': event_name,
+                        'first_name': first_name,
+                        'last_name': last_name,
+                        'registration_time': registration_time,
+                        'approval_status': approval_status
+                    }
+                )
