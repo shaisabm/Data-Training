@@ -22,3 +22,19 @@
     right: 0;
         z-index: 1000;
 }
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.logout-button {
+    position: fixed;
+    right: 20px;
+    top: 35px;
+    cursor: pointer;
+
+
+}
+
