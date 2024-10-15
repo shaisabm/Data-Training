@@ -1,6 +1,10 @@
 
 
 
-.registration-table-container{
+.registration-table {
 
+
+}
+.hidden {
+    display: none;
 }

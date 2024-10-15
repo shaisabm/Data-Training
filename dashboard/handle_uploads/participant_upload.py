@@ -16,8 +16,8 @@ def participant_upload(participant_files):
                 zoom_id = i
         event_name = Registration.objects.filter(zoom_id=zoom_id).first().event_name
 
-        participant__details = df.iloc[1:, :7]
-        for index, row in participant__details.iterrows():
+        participant_details = df.iloc[1:, :7]
+        for index, row in participant_details.iterrows():
             full_name = row.iloc[0]
             email = row.iloc[1]
             joined_time = timezone.make_aware(row.iloc[2])
