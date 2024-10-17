@@ -2,13 +2,13 @@
 {% block contain %}
 {% include 'sidebar.html'%}
 <div class="btn position-sticky start-100 m-2">
-    <button class="btn btn-primary">Exclude individuals</button>
+    <button class="btn btn-primary js-exclude-button">Exclude individuals</button>
     <button type="button" class="btn btn-primary js-upload-btn ms-2">Upload</button>
 
 </div>
-<form class="js-upload-form hidden" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    <div class="uploads-container">
+<div class="uploads-container js-upload-form hidden">
+    <form class=" " method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
         <div class="uploads-sections mb-3">
             <p class="fw-bold">Registrations</p>
             <input class="form-control" type="file" name="registration_files" id="registration_files" multiple>
@@ -16,21 +16,25 @@
             <input class="form-control" type="file" name="participant_files" id="participant_files" multiple>
             <button type="submit" class="btn btn-primary">Submit</button>
         </div>
-    </div>
-</form>
+    </form>
+</div>
 
-<form class="js-upload-form" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    <div class="exclude-list">
-        <ul class="list-group">
-            <li class="list-group-item disabled" aria-disabled="true">A disabled item</li>
-            <li class="list-group-item">A second item</li>
-            <li class="list-group-item">A third item</li>
-            <li class="list-group-item">A fourth item</li>
-            <li class="list-group-item">And a fifth one</li>
-        </ul>
-    </div>
-</form>
+<div class="exclude-container hidden js-exclude-form">
+    <form class="js-exclude-form " method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="js-exclude-list exclude-list "></div>
+
+        <div class="inputs-container">
+
+
+        <label>
+            <input type="text" class="js-email form-control" placeholder="Email..."/>
+        </label>
+        <span onclick="addExclude()" class="btn btn-success">Add</span>
+        <span  onclick="updateExclude()" class="btn btn-primary js-exclude-Save">Save</span>
+        </div>
+    </form>
+</div>
 
 
 <div class="mx-auto p-2 h3" style="width: 200px;">
@@ -48,6 +52,7 @@
 <script>
     const registrationData = JSON.parse('{{ registration_data_json|escapejs }}');
     const participantData = JSON.parse('{{ participant_data_json|escapejs }}');
+    const excludedEmailsDB_json = JSON.parse('{{ excludedEmailsDB|escapejs }}');
 </script>
 {% endblock contain %}
 

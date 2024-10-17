@@ -1,8 +1,8 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
+
     <title>NYIT</title>
     <link rel="stylesheet" href="/static/css/nav.css">
     <link rel="stylesheet" href="../static/css/base.css">
@@ -18,9 +18,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
           integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
-    <link rel="stylesheet" href="../static/css/exclude-individuals.css">
 
-
+    {% load static %}
     {% load bootstrap5 %}
     {% bootstrap_css %}
     {% bootstrap_javascript %}
@@ -36,6 +35,6 @@
 <script type="text/javascript" src="/static/scripts/home.js"></script>
 <script type="text/javascript" src="/static/scripts/participant-table.js"></script>
 <script type="text/javascript" src="/static/scripts/sidebar.js"></script>
-
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 </body>
 </html>

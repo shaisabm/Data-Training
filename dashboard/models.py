@@ -27,6 +27,13 @@ class Participant(models.Model):
     guest = models.BooleanField(default=False)
     in_waiting_room = models.BooleanField(default=False)
 
+class ExcludedIndividual(models.Model):
+    email = models.EmailField()
+
+    def __str__(self):
+        return self.email
+
+
 
 
 
