@@ -6,6 +6,6 @@ urlpatterns = [
     path('',views.home, name='home'),
     path('comparison', views.comparison, name='comparison'),
     path('visualization', views.visualization, name='visualization'),
-    path('api/excludedEmails', views.excluded_emails, name='excluded_emails')
+    path('api/excludedEmails', views.excluded_emails, name='excluded_emails'),
 
 ]
