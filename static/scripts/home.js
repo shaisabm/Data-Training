@@ -65,8 +65,7 @@ function displayEmails() {
 
 function addExclude() {
     const email = document.querySelector('.js-email').value
-    console.log(email.includes('@'))
-    if (email === '' || !email.includes('@')) return
+    if (email === '' || !email.includes('@' ) || excludedEmailsDB.includes(email)) return
     excludedEmailsDB.push(email)
     displayEmails()
     document.querySelector('.js-email').value = ''

@@ -1,10 +1,11 @@
 from django.utils import timezone
 import pandas as pd
-from dashboard.models import Registration, Participant
+from dashboard.models import Registration, Participant, ExcludedIndividual
 import re
 
 
 def participant_upload(participant_files):
+    excluded_emails = ExcludedIndividual.get_all_emails()
     for participant_file in participant_files:
 
         df = pd.read_excel(participant_file)
@@ -32,7 +33,7 @@ def participant_upload(participant_files):
                 if previous_participant.duration < duration:
                     previous_participant.duration = duration
                     previous_participant.save()
-            else:
+            elif email not in excluded_emails:
                 Participant.objects.update_or_create(
                     zoom_id=zoom_id,
                     email=email,

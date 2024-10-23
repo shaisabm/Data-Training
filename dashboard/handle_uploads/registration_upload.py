@@ -2,11 +2,12 @@ from datetime import datetime
 
 from django.utils import timezone
 import pandas as pd
-from dashboard.models import Registration
+from dashboard.models import Registration, ExcludedIndividual
 
 
 def registration_upload(registration_files):
     zoom_id = None
+    excluded_emails = ExcludedIndividual.get_all_emails()
     for registration_file in registration_files:
         df = pd.read_excel(registration_file)
         event_name = df.iloc[2, 0]
@@ -24,7 +25,8 @@ def registration_upload(registration_files):
             date ,_= str((row.iloc[3])).split(" ")
             registration_time = date
             approval_status = row.iloc[4]
-            if "@nyit.edu" in email:
+            if "@nyit.edu" in email and email not in excluded_emails:
+
                 Registration.objects.update_or_create(
                     zoom_id=zoom_id,
                     email=email,
@@ -36,3 +38,6 @@ def registration_upload(registration_files):
                         'approval_status': approval_status
                     }
                 )
+
+
+

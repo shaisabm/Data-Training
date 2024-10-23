@@ -30,6 +30,10 @@ class Participant(models.Model):
 class ExcludedIndividual(models.Model):
     email = models.EmailField()
 
+    @classmethod
+    def get_all_emails(cls):
+        return cls.objects.values_list('email', flat=True)
+
     def __str__(self):
         return self.email
 

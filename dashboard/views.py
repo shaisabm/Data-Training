@@ -47,8 +47,8 @@ def excluded_emails(request):
         ExcludedIndividual.objects.all().delete()
         for email in emails:
             ExcludedIndividual.objects.create(email=email)
-
-
+        Registration.objects.filter(email__in=emails).delete()
+        Participant.objects.filter(email__in=emails).delete()
         return HttpResponse('Excluded emails updated successfully', status=200)
 
 
