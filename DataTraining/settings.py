@@ -84,7 +84,7 @@ WSGI_APPLICATION = 'DataTraining.wsgi.app'
 #         'HOST': '127.0.0.1',
 #         'PORT': '5432',
 #     }
-# }
+#}
 DATABASES = {
     'default': {
 
@@ -103,6 +103,17 @@ DATABASES = {
     }
 
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'defaultdb',
+#         'USER': 'avnadmin',
+#         'PASSWORD': os.getenv('MYSQL_PASSWORD'),
+#         'HOST': os.getenv('MYSQL_HOST'),
+#         'PORT': os.getenv('MYSQL_PORT'),
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
