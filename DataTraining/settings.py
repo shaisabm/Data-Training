@@ -16,7 +16,7 @@ print(f'Base {BASE_DIR}')
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.vercel.app','.now.sh']
 
@@ -84,7 +84,7 @@ WSGI_APPLICATION = 'DataTraining.wsgi.app'
 #         'HOST': '127.0.0.1',
 #         'PORT': '5432',
 #     }
-#}
+# }
 DATABASES = {
     'default': {
 
