@@ -1,3 +1,4 @@
+
 {
   "version": 2,
   "builds": [
@@ -23,6 +24,5 @@
       "src": "/(.*)",
       "dest": "DataTraining/wsgi.py"
     }
-  ],
-  "outputDirectory": "staticfiles"
+  ]
 }
