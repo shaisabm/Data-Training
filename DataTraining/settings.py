@@ -16,7 +16,7 @@ print(f'Base {BASE_DIR}')
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.getenv('DEBUG')
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.vercel.app']
 
