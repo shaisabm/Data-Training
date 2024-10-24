@@ -1,6 +1,7 @@
 
-python3.9 -m venv env
+python3.12 -m venv env
 source env/bin/activate
 pip3 install -r requirements.txt
-python3.9 -m pip install Django
-python3.9 manage.py collectstatic --noinput
+python3.12 -m pip install
+python3.12 install python-dotenv
+python3.12 manage.py collectstatic --noinput
