@@ -1,11 +1,38 @@
 import json
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .handle_uploads import registration_upload, participant_upload
 from .handle_relationships import participated_tf
 from .models import Registration, Participant, ExcludedIndividual
 from django.http import HttpResponse
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 
+
+def login_user(request):
+    if request.user.is_authenticated:
+        return redirect('home')
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username = username, password = password)
+        if user is not None:
+            login(request, user)
+            return redirect('home')
+
+        else:
+            messages.error(request, 'Username or password is incorrect')
+
+            return render(request, 'dashboard/login.html')
+
+    return render(request, 'dashboard/login.html')
+
+def logout_user(request):
+    logout(request)
+    return redirect('login')
+
+@login_required(login_url='/login')
 def home(request):
     if request.method == "POST":
         participant_files = request.FILES.getlist('participant_files')
@@ -51,10 +78,11 @@ def excluded_emails(request):
         Participant.objects.filter(email__in=emails).delete()
         return HttpResponse('Excluded emails updated successfully', status=200)
 
-
+@login_required(login_url='/login')
 def comparison(request):
     return render(request, 'dashboard/comparison.html')
 
+@login_required(login_url='/login')
 def visualization(request):
     return render(request, 'dashboard/visualization.html')
 

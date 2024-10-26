@@ -10,12 +10,11 @@
     </div>
 
     <div class="nav-bar"></div>
-
-    <div class="button-container">
-        <!--        <button class="logout-button btn btn-warning">-->
-        <!--            Logout-->
-        <!--        </button>-->
-        <a href="#"><i class="fa-solid fa-door-open fa-2xl logout-button" style="color: #ffffff"></i></a>
-    </div>
+    {% if user.is_authenticated %}
+        <div class="button-container">
+            <a href="{% url 'logout' %}"><i class="fa-solid fa-door-open fa-2xl logout-button"
+                                            style="color: #ffffff"></i></a>
+        </div>
+    {% endif %}
 
 </div>
