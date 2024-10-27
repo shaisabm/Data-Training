@@ -69,12 +69,12 @@ WSGI_APPLICATION = 'DataTraining.wsgi.app'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 # DATABASES = {
 #     'default': {
@@ -87,24 +87,24 @@ DATABASES = {
 #     }
 # }
 
-# DATABASES = {
-#     'default': {
-#
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+DATABASES = {
+    'default': {
 
-#        'NAME': os.getenv('NAME'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
-#        'USER': "avnadmin",
+       'NAME': os.getenv('NAME'),
 
-#        'PASSWORD': os.getenv('PASSWORD'),
+       'USER': "avnadmin",
 
-#        'HOST':  os.getenv('HOST'),
+       'PASSWORD': os.getenv('PASSWORD'),
 
-#        'PORT': os.getenv('PORT'),
+       'HOST':  os.getenv('HOST'),
 
-#    }
+       'PORT': os.getenv('PORT'),
 
-#}
+   }
+
+}
 
 # DATABASES = {
 #      'default': {
