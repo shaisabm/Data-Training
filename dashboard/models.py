@@ -10,7 +10,7 @@ class Registration(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.EmailField()
-    registration_time = models.CharField()
+    registration_time = models.CharField(max_length=100)
     approval_status = models.CharField(max_length=100)
     participated = models.BooleanField(default=False, null=True, blank=True)
 

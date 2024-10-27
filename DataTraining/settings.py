@@ -69,13 +69,13 @@ WSGI_APPLICATION = 'DataTraining.wsgi.app'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-#
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -86,35 +86,36 @@ WSGI_APPLICATION = 'DataTraining.wsgi.app'
 #         'PORT': '5432',
 #     }
 # }
-DATABASES = {
-    'default': {
-
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-
-        'NAME': os.getenv('NAME'),
-
-        'USER': "avnadmin",
-
-        'PASSWORD': os.getenv('PASSWORD'),
-
-        'HOST':  os.getenv('HOST'),
-
-        'PORT': os.getenv('PORT'),
-
-    }
-
-}
 
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'defaultdb',
-#         'USER': 'avnadmin',
-#         'PASSWORD': os.getenv('MYSQL_PASSWORD'),
-#         'HOST': os.getenv('MYSQL_HOST'),
-#         'PORT': os.getenv('MYSQL_PORT'),
-#     }
-# }
+#
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+
+#        'NAME': os.getenv('NAME'),
+
+#        'USER': "avnadmin",
+
+#        'PASSWORD': os.getenv('PASSWORD'),
+
+#        'HOST':  os.getenv('HOST'),
+
+#        'PORT': os.getenv('PORT'),
+
+#    }
+
+#}
+
+# DATABASES = {
+#      'default': {
+#          'ENGINE': 'django.db.backends.mysql',
+#          'NAME': 'defaultdb',
+#          'USER': 'avnadmin',
+#          'PASSWORD': os.getenv('MYSQL_PASSWORD'),
+#          'HOST': os.getenv('MYSQL_HOST'),
+#          'PORT': os.getenv('MYSQL_PORT'),
+#      }
+#  }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
