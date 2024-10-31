@@ -44,7 +44,7 @@ new Handsontable(masterTable, {
         {data: 5, type: "date", dateFormat: 'MM-DD-YYYY'}, // Registration Time
         {data: 6, type: "text"}, // Join Time
         {data: 7, type: "text"}, // Leave Time
-        {data: 8, type: "text"}, // Duration
+        {data: 8, type: "numeric"}, // Duration
         {data: 9, type: "text"}, // Attended
     ],
     dropdownMenu: true,

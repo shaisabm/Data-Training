@@ -43,8 +43,7 @@ def home(request):
                             participant_files}
         registration_dict = {str(registration_file).split('_')[1]: registration_file for registration_file in
                              registration_files}
-        print(participant_dict)
-        print(registration_dict)
+
 
         keys_to_remove = []
 
