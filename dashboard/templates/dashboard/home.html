@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% block contain %}
 {% include 'sidebar.html'%}
+    <link type="text/css" rel="stylesheet" href="/static/css/master-table.css">
+
 <div class="btn position-sticky start-100 m-2">
     <button class="btn btn-primary js-exclude-button">Exclude individuals</button>
     <button type="button" class="btn btn-primary js-upload-btn ms-2">Upload</button>
@@ -41,21 +43,19 @@
         Registrations
     </div>
 
-    {% include "registration-table.html" %}
+    {% include "master-table.html" %}
 
-    <div class="mx-auto p-2 h3" style="width: 200px;">
-        Participants
-    </div>
 
-    {% include "participant-table.html" %}
 </div>
-
-
 <script>
-    const registrationData = JSON.parse('{{ registration_data_json|escapejs }}');
-    const participantData = JSON.parse('{{ participant_data_json|escapejs }}');
+    const data_json= JSON.parse('{{ data_json|escapejs }}');
     const excludedEmailsDB_json = JSON.parse('{{ excludedEmailsDB|escapejs }}');
 </script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
+<script type="text/javascript" src="/static/scripts/home.js"></script>
+    <script src="/static/scripts/master-table.js"></script>
+
+
 {% endblock contain %}
 
 

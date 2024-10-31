@@ -6,9 +6,9 @@ import re
 folders = {
 
 # May
-#     'participants': '/Users/vedshukla/Downloads/2024 May Training Attendance/parti',
-#     'registration': '/Users/vedshukla/Downloads/2024 May Training Attendance/reg',
-#     'master_file': '/Users/vedshukla/Downloads/2024 May Training Attendance/m'
+    'participants': '/Users/shaisabm/Downloads/',
+    'registration': '/Users/shaisabm/Downloads/',
+    'master_file': '/Users/shaisabm/Documents/Django/DataTraining/dashboard/data_processing/data_processing_tests/master'
 
 # June
 #     'participants': '/Users/vedshukla/Downloads/2024 June Training Attendance/Parti',

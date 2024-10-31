@@ -1,43 +1,52 @@
-const registrationTable = document.getElementById("registration-table");
 
-const data = registrationData.map(item => {
+
+const masterTable = document.getElementById("master-table");
+
+const data = data_json.map(item => {
     return [
-        item.event_name,
-        item.zoom_id,
+        item.topic,
+        item.event_date,
         item.first_name,
         item.last_name,
         item.email,
         item.registration_time,
-        item.approval_status,
-        item.participated.toString()
+        item.join_time,
+        item.leave_time,
+        item.duration,
+        item.attended,
     ]
 })
 
-new Handsontable(registrationTable, {
+
+new Handsontable(masterTable, {
     data,
     height: 500,
     width: '100%',
 
-    colWidths: [400, 140, 140, 140, 180, 140, 140, 140],
+    colWidths: [350, 130, 130, 130, 130, 150, 130, 130, 130, 130],
     colHeaders: [
-        "Event Name",
-        "Zoom ID",
+        "Topic",
+        "Event Date",
         "First Name",
         "Last Name",
         "Email",
         "Registration Time",
-        "Approval Status",
-        "Participated",
+        "Join Time",
+        "Leave Time",
+        'Duration',
+        'Attended'
     ],
     columns: [
-        {data: 0, type: "text"},// Event Name
-        {data: 1, type: "text"}, // Zoom ID
+        {data: 0, type: "text"},// Topic
+        {data: 1, type: "text", dateFormat: 'MM-DD-YYYY'}, // Event Date
         {data: 2, type: "text"}, // First Name
         {data: 3, type: "text"}, // Last Name
         {data: 4, type: "text"}, // Email
-        {data: 5, type: "date", dateFormat: 'YYYY-MM-DD'}, // Registration Time
-        {data: 6, type: "text"}, // Approval Status
-        {data: 7, type: "text"}, // Participated
+        {data: 5, type: "date", dateFormat: 'MM-DD-YYYY'}, // Registration Time
+        {data: 6, type: "text"}, // Join Time
+        {data: 7, type: "text"}, // Leave Time
+        {data: 8, type: "text"}, // Duration
+        {data: 9, type: "text"}, // Attended
     ],
     dropdownMenu: true,
     hiddenColumns: {

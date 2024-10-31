@@ -2,13 +2,13 @@ import json
 from django.shortcuts import render, redirect
 from .handle_uploads import registration_upload, participant_upload
 from .handle_relationships import participated_tf
-from .models import Registration, Participant, ExcludedIndividual
+from .models import ExcludedIndividual, MasterDB
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-
-
+from .data_processing.processing_file import data_cleaning
+from .master_to_db.master_to_db import master_to_db
 
 def login_user(request):
     if request.user.is_authenticated:
@@ -37,34 +37,24 @@ def home(request):
     if request.method == "POST":
         participant_files = request.FILES.getlist('participant_files')
         registration_files = request.FILES.getlist('registration_files')
+        registration_file = registration_files[0]
+        participant_file = participant_files[0]
+        master_df = data_cleaning(registration_file, participant_file)
+        master_to_db(master_df)
 
-        registration_upload.registration_upload(registration_files)
-        participant_upload.participant_upload(participant_files)
-        participated_tf.participated_tf(registration_files)
 
-    registrations = Registration.objects.all().values(
-        'event_name', 'zoom_id', 'first_name', 'last_name', 'email', 'registration_time', 'approval_status', 'participated'
+
+    data = MasterDB.objects.all().values(
+        'topic', 'event_date', 'first_name', 'last_name', 'email', 'registration_time', 'join_time', 'leave_time', 'duration', 'attended'
     )
-    registration_data = list(registrations)
-    registration_data_json = json.dumps(registration_data)
 
-    participation = Participant.objects.all().values(
-        'event_name', 'zoom_id', 'full_name', 'email', 'joined_time', 'leave_time', 'duration', 'guest', 'in_waiting_room'
-    )
-    participant_data = [
-        {
-            **item,
-            'joined_time': item['joined_time'].isoformat(),
-            'leave_time': item['leave_time'].isoformat()
-        }
-        for item in participation
-    ]
-    participant_data_json = json.dumps(participant_data)
-
+    data_json = json.dumps(list(data))
     excludedEmailsDB = json.dumps(list(ExcludedIndividual.objects.all().values('email')))
 
-    context = {'registration_data_json': registration_data_json, 'participant_data_json': participant_data_json, 'excludedEmailsDB':excludedEmailsDB}
+    context = {'excludedEmailsDB':excludedEmailsDB, 'data_json': data_json}
     return render(request, 'dashboard/home.html', context)
+
+
 
 def excluded_emails(request):
     if request.method == 'POST':
