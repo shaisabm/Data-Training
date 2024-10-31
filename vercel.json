@@ -24,6 +24,5 @@
     }
   ],
 
-  "outputDirectory": "staticfiles",
-  "buildCommand": "sh vercel.sh"
+  "outputDirectory": "staticfiles"
 }

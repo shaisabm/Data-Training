@@ -76,33 +76,33 @@ WSGI_APPLICATION = 'DataTraining.wsgi.app'
 #     }
 # }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'data-training',
-#         'USER': 'postgres',
-#         'PASSWORD': os.getenv('POSTGRES_DB_PASS'),
-#         'HOST': '127.0.0.1',
-#         'PORT': '5432',
-#     }
-# }
-
 DATABASES = {
     'default': {
-
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'data-training',
+        'USER': 'postgres',
+        'PASSWORD': os.getenv('POSTGRES_DB_PASS'),
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
 
-       'NAME': os.getenv('NAME'),
+}
 
-       'USER': "avnadmin",
-
-       'PASSWORD': os.getenv('PASSWORD'),
-
-       'HOST':  os.getenv('HOST'),
-
-       'PORT': os.getenv('PORT'),
-
-   }
+# DATABASES = {
+#     'default': {
+#
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#
+#        'NAME': os.getenv('NAME'),
+#
+#        'USER': "avnadmin",
+#
+#        'PASSWORD': os.getenv('PASSWORD'),
+#
+#        'HOST':  os.getenv('HOST'),
+#
+#        'PORT': os.getenv('PORT'),
+#
+#    }
 
 }
 
