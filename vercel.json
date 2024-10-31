@@ -15,11 +15,6 @@
       "config": {
         "distDir": "staticfiles"
       }
-    },
-    {
-      "build": {
-        "command": "sh vercel.sh"
-      }
     }
   ],
   "routes": [
@@ -28,5 +23,7 @@
       "dest": "DataTraining/wsgi.py"
     }
   ],
-  "outputDirectory": "staticfiles"
+
+  "outputDirectory": "staticfiles",
+  "buildCommand": "sh vercel.sh"
 }
