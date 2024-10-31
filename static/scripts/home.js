@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const excludeButton = document.querySelector('.js-exclude-button');
     const excludeForm = document.querySelector('.js-exclude-form');
 
+
     excludeButton.addEventListener('click', () =>{
         excludeForm.classList.toggle('hidden')
         if (excludeButton.innerText === 'Exclude individuals') {
@@ -27,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
             excludeButton.innerText = 'Exclude individuals';
         }
     })
+
 
 
     displayEmails()
@@ -103,3 +105,4 @@ function updateExclude() {
         }
     });
 }
+

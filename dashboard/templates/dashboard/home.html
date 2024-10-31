@@ -1,58 +1,71 @@
 {% extends 'base.html' %}
 {% block contain %}
-{% include 'sidebar.html'%}
-    <link type="text/css" rel="stylesheet" href="/static/css/master-table.css">
+    {% include 'sidebar.html' %}
 
-<div class="btn position-sticky start-100 m-2">
-    <button class="btn btn-primary js-exclude-button">Exclude individuals</button>
-    <button type="button" class="btn btn-primary js-upload-btn ms-2">Upload</button>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="d-flex flex-row justify-content-center">
+                <div class="alert alert-warning alert-dismissible fade show " role="alert">
+                    {{ message }}.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        {% endfor %}
 
-</div>
-<div class="uploads-container js-upload-form hidden">
-    <form class=" " method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="uploads-sections mb-3">
-            <p class="fw-bold">Registrations</p>
-            <input class="form-control" type="file" name="registration_files" id="registration_files" multiple>
-            <p class="fw-bold">Participants</p>
-            <input class="form-control" type="file" name="participant_files" id="participant_files" multiple>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </div>
-    </form>
-</div>
-
-<div class="exclude-container hidden js-exclude-form">
-    <form class="js-exclude-form " method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="js-exclude-list exclude-list "></div>
-
-        <div class="inputs-container">
+    {% endif %}
 
 
-            <label>
-                <input type="text" class="js-email form-control" placeholder="Email..."/>
-            </label>
-            <span onclick="addExclude()" class="btn btn-success">Add</span>
-            <span onclick="updateExclude()" class="btn btn-primary js-exclude-Save">Save</span>
-        </div>
-    </form>
-</div>
-
-<div class="tables">
-    <div class="mx-auto p-2 h3" style="width: 200px;">
-        Registrations
+    <div class="btn position-sticky start-100 m-2">
+        <button class="btn btn-primary js-exclude-button ">Exclude individuals</button>
+        <button type="button" class="btn btn-primary js-upload-btn ms-2">Upload</button>
     </div>
 
-    {% include "master-table.html" %}
+    <div class="uploads-container js-upload-form hidden">
+        <form class=" " method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="uploads-sections mb-3">
+                <p class="fw-bold">Registrations</p>
+                <input class="form-control" type="file" name="registration_files" id="registration_files" multiple>
+                <p class="fw-bold">Participants</p>
+                <input class="form-control" type="file" name="participant_files" id="participant_files" multiple>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="exclude-container hidden js-exclude-form">
+        <form class="js-exclude-form " method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="js-exclude-list exclude-list "></div>
+
+            <div class="inputs-container">
 
 
-</div>
-<script>
-    const data_json= JSON.parse('{{ data_json|escapejs }}');
-    const excludedEmailsDB_json = JSON.parse('{{ excludedEmailsDB|escapejs }}');
-</script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
-<script type="text/javascript" src="/static/scripts/home.js"></script>
+                <label>
+                    <input type="text" class="js-email form-control" placeholder="Email..."/>
+                </label>
+                <span onclick="addExclude()" class="btn btn-success">Add</span>
+                <span onclick="updateExclude()" class="btn btn-primary js-exclude-Save">Save</span>
+            </div>
+        </form>
+    </div>
+
+    <div class="tables">
+        <div class="mx-auto p-2 h3" style="max-width: 300px;">
+            Attendance Table
+        </div>
+
+        {% include "master-table.html" %}
+
+
+    </div>
+    <script>
+        const data_json = JSON.parse('{{ data_json|escapejs }}');
+        const excludedEmailsDB_json = JSON.parse('{{ excludedEmailsDB|escapejs }}');
+    </script>
+    <script type="text/javascript"
+            src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
+    <script type="text/javascript" src="/static/scripts/home.js"></script>
     <script src="/static/scripts/master-table.js"></script>
 
 

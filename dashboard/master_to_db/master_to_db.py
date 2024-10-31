@@ -11,6 +11,9 @@ def master_to_db(master_df):
         else:
             duration = row['duration']
 
+        email = row['email']
+        if ExcludedIndividual.objects.filter(email=email).exists():
+            continue
         MasterDB.objects.update_or_create(
             topic = row['topic'],
             zoom_id = row['id'],

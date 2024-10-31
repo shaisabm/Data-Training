@@ -20,8 +20,7 @@ const data = data_json.map(item => {
 
 new Handsontable(masterTable, {
     data,
-    height: 500,
-    width: '100%',
+    height: 750,
 
     colWidths: [350, 130, 130, 130, 130, 150, 130, 130, 130, 130],
     colHeaders: [
