@@ -31,7 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'dashboard',
-    'bootstrap5'
+    'bootstrap5',
 ]
 
 MIDDLEWARE = [
@@ -85,6 +85,7 @@ WSGI_APPLICATION = 'DataTraining.wsgi.app'
 #         'HOST': '127.0.0.1',
 #         'PORT': '5432',
 #
+#     }
 # }
 
 DATABASES = {
@@ -92,7 +93,7 @@ DATABASES = {
 
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
-       'NAME': os.getenv('NAME'),
+       'NAME': "defaultdb2",
 
        'USER': "avnadmin",
 
@@ -103,7 +104,6 @@ DATABASES = {
        'PORT': os.getenv('PORT'),
 
    }
-
 }
 
 # DATABASES = {
