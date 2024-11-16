@@ -2,9 +2,8 @@ import pandas as pd
 from io import StringIO
 import os
 import re
-
+import calendar
 def data_cleaning(registration_file, participant_file):
-    # os.makedirs(folders['master_file'], exist_ok=True)
 
     def standardize_columns(data):
         data.columns = data.columns.str.lower()
@@ -68,10 +67,13 @@ def data_cleaning(registration_file, participant_file):
         return attendee_df
 
     def extract_event_date_from_filename(filename):
-        match = re.search(r'registration_\d+_(\d{4})_(\d{2})_(\d{2})', filename)
-        if match:
-            year, month, day = match.groups()
-            return f"{month}/{day}/{year}"
+        # match = re.search(r'registration_\d+_(\d{4})_(\d{2})_(\d{2})', filename)
+        # if match:
+        #     year, month, day = match.groups()
+        #     return f"{month}/{day}/{year}"
+        month = (filename.split('_')[2]).split('.')[0]
+        if month:
+            return calendar.month_name[int(month)]
         return ""
 
 
@@ -110,13 +112,12 @@ def data_cleaning(registration_file, participant_file):
         master_df = master_df[['topic', 'id', 'event date', 'first name', 'last name', 'email',
                                'registration time', 'approval status', 'join time', 'leave time',
                                'duration', 'guest', 'attended']]
-        master_df['event date'] = pd.to_datetime(master_df['event date'], format='%m/%d/%Y', errors='coerce')
-        master_df = master_df.sort_values(by='event date')
-        master_df['event date'] = master_df['event date'].dt.strftime('%m/%d/%Y')
 
-        # output_file_path = os.path.join(folders['master_file'], 'master.csv')
-        # master_df.to_csv(output_file_path, index=False)
-        # print(f"Master file saved: {output_file_path}")
+        # Commented are the lines which were used to convert the date format to 'mm/dd/yyyy'
+        # master_df['event date'] = pd.to_datetime(master_df['event date'], format='%m/%d/%Y', errors='coerce')
+        # master_df = master_df.sort_values(by='event date')
+        # master_df['event date'] = master_df['event date'].dt.strftime('%m/%d/%Y')
+
         return master_df
     else:
         print("No data found to process. Please check input folders.")
