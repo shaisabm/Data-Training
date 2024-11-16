@@ -22,7 +22,5 @@
       "src": "/(.*)",
       "dest": "DataTraining/wsgi.py"
     }
-  ],
-
-  "outputDirectory": "staticfiles"
+  ]
 }
