@@ -134,14 +134,14 @@ def get_missing_files(request):
                         participant_files}
 
     registration_dict = {str(f).split('_')[1]: f for f in registration_files}
-    missing_files = []
+    missing_files = set()
 
     for r_key in registration_dict.keys():
         if r_key not in participant_dict.keys():
-            missing_files.append("Participation file is missing for " + registration_dict[r_key])
+            missing_files.add("Participation file is missing for " + registration_dict[r_key])
 
     for p_key in participant_dict.keys():
         if p_key not in registration_dict.keys():
-            missing_files.append(f'Registration file is missing for {participant_dict[p_key]}')
+            missing_files.add(f'Registration file is missing for {participant_dict[p_key]}')
     print(missing_files)
-    return Response({'missing_files': missing_files}, status=200)
+    return Response({'missing_files': list(missing_files)}, status=200)
