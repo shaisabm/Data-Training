@@ -34,6 +34,7 @@ def login_user(request):
 
 def logout_user(request):
     logout(request)
+    print("Logged out successfully")
     return redirect('login')
 
 
