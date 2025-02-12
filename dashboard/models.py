@@ -8,7 +8,9 @@ from django.db import models
 class MasterDB(models.Model):
     topic = models.CharField(max_length=500, null=True, blank=True)
     zoom_id = models.CharField(max_length=100)
+    event_month = models.CharField(max_length=100)
     event_date = models.CharField(max_length=100)
+    event_time = models.CharField(max_length=100)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.EmailField()
