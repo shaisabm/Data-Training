@@ -1,8 +1,9 @@
 import pandas as pd
 from io import StringIO
-import os
-import re
 import calendar
+import os
+from datetime import datetime
+
 def data_cleaning(registration_file, participant_file):
 
     def standardize_columns(data):
@@ -37,9 +38,15 @@ def data_cleaning(registration_file, participant_file):
             if len(split_line) >= 2 and split_line[1].strip().replace(" ", "").isdigit():
                 topic = split_line[0].strip()
                 topic_id = split_line[1].strip()
-                scheduled_time = split_line[2].strip().replace('"', '')[:10] if len(split_line) > 2 else ""
-                topic_data.append([topic, topic_id, scheduled_time])
-        topic_df = pd.DataFrame(topic_data, columns=["topic", "id", "event date"])
+                scheduled_time = split_line[2].strip().replace('"', '') #[:10] if len(split_line) > 2 else ""
+                dt = datetime.strptime(scheduled_time,'%m/%d/%Y %H:%M')
+
+                date_str = dt.strftime('%m/%d/%Y')
+                time_str = dt.strftime('%I:%M %p')
+                month_str = dt.strftime('%B')
+
+                topic_data.append([topic, topic_id, month_str, date_str, time_str])
+        topic_df = pd.DataFrame(topic_data, columns=["topic", "id", "event month", "event date", "event time"])
         return topic_df
 
     def clean_attendee_data(file_content):
@@ -67,15 +74,10 @@ def data_cleaning(registration_file, participant_file):
         return attendee_df
 
     def extract_event_date_from_filename(filename):
-        # match = re.search(r'registration_\d+_(\d{4})_(\d{2})_(\d{2})', filename)
-        # if match:
-        #     year, month, day = match.groups()
-        #     return f"{month}/{day}/{year}"
         month = (filename.split('_')[2]).split('.')[0]
         if month:
             return calendar.month_name[int(month)]
         return ""
-
 
     # Process participant and registration files in-memory
     participant_data = pd.read_csv(StringIO(participant_file.read().decode('utf-8')))
@@ -100,16 +102,16 @@ def data_cleaning(registration_file, participant_file):
         lambda x: 'No' if pd.notnull(x) else 'Yes')
     merged_data.drop(columns=['_merge'], inplace=True)
 
-    for col in ["topic", "id", "event date"]:
+    for col in ["topic", "id", "event month", "event date", "event time"]:
         merged_data[col] = reg_topic_data[col].iloc[0] if col in reg_topic_data else ""
 
-    merged_data["event date"] = event_date
+    merged_data["event month"] = event_date
 
     all_data = [merged_data]
 
     if all_data:
         master_df = pd.concat(all_data, ignore_index=True)
-        master_df = master_df[['topic', 'id', 'event date', 'first name', 'last name', 'email',
+        master_df = master_df[['topic', 'id', 'event month', 'event date', 'event time', 'first name', 'last name', 'email',
                                'registration time', 'approval status', 'join time', 'leave time',
                                'duration', 'guest', 'attended']]
 
@@ -117,6 +119,14 @@ def data_cleaning(registration_file, participant_file):
         # master_df['event date'] = pd.to_datetime(master_df['event date'], format='%m/%d/%Y', errors='coerce')
         # master_df = master_df.sort_values(by='event date')
         # master_df['event date'] = master_df['event date'].dt.strftime('%m/%d/%Y')
+
+        ## TEST -- MUST BE DELETED IN PRODUCTION
+
+        # 6: Save Final Master File
+        # file_path = "/Users/shaisabm/Documents/Django/DataTraining/dashboard/data_processing/data_processing_tests/master"
+        # output_file_path = os.path.join(file_path, 'Master_Attendance_File.csv')
+        # master_df.to_csv(output_file_path, index=False)
+        # print(f"Master file saved: {output_file_path}")
 
         return master_df
     else:
