@@ -1,7 +1,8 @@
 import json
-
+import datetime
+import uuid
+import jwt
 from django.shortcuts import render, redirect
-
 from .models import ExcludedIndividual, MasterDB
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import authenticate, login, logout
@@ -26,9 +27,7 @@ def login_user(request):
             return redirect('home')
         else:
             messages.error(request, 'Username or password is incorrect')
-
             return render(request, 'dashboard/login.html')
-
     return render(request, 'dashboard/login.html')
 
 
@@ -47,7 +46,6 @@ def home(request):
             participant_files = []
 
         request_dict = dict(request.FILES)
-
         registration_files = []
         for key in request.FILES.keys():
             for file in request_dict[key]:
@@ -123,7 +121,32 @@ def comparison(request):
 
 @login_required(login_url='/login')
 def visualization(request):
-    return render(request, 'dashboard/visualization.html')
+
+
+    token = jwt.encode(
+        {
+            "iss": "40fe3bd6-b149-40eb-a4e3-a9bdcf710a5b",
+            "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=10),
+            "jti": str(uuid.uuid4()),
+            "aud": "tableau",
+            "sub": "smistr06@nyit.edu",
+            "scp": ["tableau:views:embed"]
+            ,
+            "Region": "East"
+
+        },
+        "j9QlM2ZzN+kD8Lqqdpbmg994B/iMSVTLnTWeeL+gYv4=",
+        algorithm="HS256",
+        headers={
+            'kid': "cc4942ea-6cea-4195-83ec-965eaad910ac",
+            'iss': "40fe3bd6-b149-40eb-a4e3-a9bdcf710a5b"
+        }
+    )
+
+
+    contexts = {"token": token}
+
+    return render(request, 'dashboard/visualization.html', context=contexts)
 
 
 @api_view(['POST'])
@@ -143,5 +166,4 @@ def get_missing_files(request):
     for p_key in participant_dict.keys():
         if p_key not in registration_dict.keys():
             missing_files.add(f'Registration file is missing for {participant_dict[p_key]}')
-    print(missing_files)
     return Response({'missing_files': list(missing_files)}, status=200)
