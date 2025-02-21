@@ -1,5 +1,6 @@
 import json
 import datetime
+import os
 import uuid
 import jwt
 import re
@@ -152,21 +153,21 @@ def comparison(request):
 def visualization(request):
     token = jwt.encode(
         {
-            "iss": "40fe3bd6-b149-40eb-a4e3-a9bdcf710a5b",
+            "iss": os.getenv('iss'),
             "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=10),
             "jti": str(uuid.uuid4()),
             "aud": "tableau",
-            "sub": "smistr06@nyit.edu",
+            "sub": os.getenv('sub'),
             "scp": ["tableau:views:embed"]
             ,
             "Region": "East"
 
         },
-        "j9QlM2ZzN+kD8Lqqdpbmg994B/iMSVTLnTWeeL+gYv4=",
+        os.getenv('secret'),
         algorithm="HS256",
         headers={
-            'kid': "cc4942ea-6cea-4195-83ec-965eaad910ac",
-            'iss': "40fe3bd6-b149-40eb-a4e3-a9bdcf710a5b"
+            'kid': os.getenv('kid'),
+            'iss': os.getenv('iss')
         }
     )
 
