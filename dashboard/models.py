@@ -1,8 +1,7 @@
-
 from django.db import models
+import json
 
 # Create your models here.
-
 
 
 class MasterDB(models.Model):
@@ -21,7 +20,6 @@ class MasterDB(models.Model):
     attended = models.CharField(max_length=100)
 
 
-
 class ExcludedIndividual(models.Model):
     email = models.EmailField()
 
@@ -33,9 +31,13 @@ class ExcludedIndividual(models.Model):
         return self.email
 
 
+class AiModel(models.Model):
+    ai_model = models.CharField(null=True , max_length=50)
+    api_key = models.CharField(max_length=200)
+    base_url = models.CharField(max_length=100)
+    system_instructions = models.TextField()
 
-
-
-
+    def __str__(self):
+        return str(self.ai_model)
 
 
