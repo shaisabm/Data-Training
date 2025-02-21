@@ -28,14 +28,14 @@
                 <input class="form-control" type="file" name="registration_files" id="registration_files" multiple>
                 <p class="fw-bold">Participants</p>
                 <input class="form-control" type="file" name="participant_files" id="participant_files" multiple>
-                <button type="button" class="btn btn-primary js-submit-btn">Submit</button>
+                <button type="submit" class="btn btn-primary js-submit-btn">Submit</button>
             </div>
         </form>
     </div>
 
     <div class="position-absolute top-10 start-50 translate-middle hidden js-confirm-date-container confirm-date-container"
          style="z-index: 999">
-     <button type="button" class="js-final-submit-btn btn btn-success" style="z-index: 1000">Confirm and Submit
+    <button type="button" class="js-final-submit-btn btn btn-success" style="z-index: 1000">Confirm and Submit
             </button>
         <form class="js-event-date position-absolute  event-date" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
