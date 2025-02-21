@@ -150,28 +150,28 @@ def comparison(request):
 
 @login_required(login_url='/login')
 def visualization(request):
-    # token = jwt.encode(
-    #     {
-    #         "iss": os.getenv('iss'),
-    #         "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=10),
-    #         "jti": str(uuid.uuid4()),
-    #         "aud": "tableau",
-    #         "sub": os.getenv('sub'),
-    #         "scp": ["tableau:views:embed"]
-    #         ,
-    #         "Region": "East"
-    #
-    #     },
-    #     os.getenv('secret'),
-    #     algorithm="HS256",
-    #     headers={
-    #         'kid': os.getenv('kid'),
-    #         'iss': os.getenv('iss')
-    #     }
-    # )
+    token = jwt.encode(
+        {
+            "iss": os.getenv('iss'),
+            "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=10),
+            "jti": str(uuid.uuid4()),
+            "aud": "tableau",
+            "sub": os.getenv('sub'),
+            "scp": ["tableau:views:embed"]
+            ,
+            "Region": "East"
+
+        },
+        os.getenv('secret'),
+        algorithm="HS256",
+        headers={
+            'kid': os.getenv('kid'),
+            'iss': os.getenv('iss')
+        }
+    )
 
 
-    contexts = {"token": "token"}
+    contexts = {"token": token}
 
     return render(request, 'dashboard/visualization.html', context=contexts)
 
