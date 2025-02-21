@@ -43,7 +43,7 @@ def logout_user(request):
 @login_required(login_url='/login')
 def home(request):
 
-    # if request.method == "POST":
+    if request.method == "POST":
         # OLD CODE START
         # try:
         #     participant_files = request.FILES.getlist('participation_files')
@@ -99,23 +99,23 @@ def home(request):
         #     master_to_db(master_df)
         # OLD CODE END
 
-        # if request.method == "POST":
-        #
-        #     registration_files = dict(request.FILES).setdefault("registration_files", None)
-        #     participant_files = dict(request.FILES).setdefault("participant_files", None)
-        #
-        #     matched_pairs = match_registration_participant_files(registration_files, participant_files)['matched_pairs']
-        #     missing_files = match_registration_participant_files(registration_files, participant_files)['missing_files']
-        #
-        #     ai_models = AiModel.objects.all()
-        #
-        #     for reg, part in matched_pairs:
-        #         for model_config in ai_models:
-        #             open_ai(reg, part, model_config)
-        #             print("-------------------------------------------------------------------------" + '\n')
-        #
-        #
-        #
+        if request.method == "POST":
+
+            registration_files = dict(request.FILES).setdefault("registration_files", None)
+            participant_files = dict(request.FILES).setdefault("participant_files", None)
+
+            matched_pairs = match_registration_participant_files(registration_files, participant_files)['matched_pairs']
+            missing_files = match_registration_participant_files(registration_files, participant_files)['missing_files']
+
+            ai_models = AiModel.objects.all()
+
+            for reg, part in matched_pairs:
+                for model_config in ai_models:
+                    open_ai(reg, part, model_config)
+                    print("-------------------------------------------------------------------------" + '\n')
+
+
+
 
     data = MasterDB.objects.all().values(
         'topic', 'event_date', 'first_name', 'last_name', 'email', 'registration_time', 'join_time', 'leave_time',
