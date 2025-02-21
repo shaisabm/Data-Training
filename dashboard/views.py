@@ -2,8 +2,9 @@ import json
 import datetime
 import uuid
 import jwt
+import re
 from django.shortcuts import render, redirect
-from .models import ExcludedIndividual, MasterDB
+from .models import ExcludedIndividual, MasterDB, AiModel
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -13,7 +14,8 @@ from .master_to_db.master_to_db import master_to_db
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-
+from .spreadsheet_processing.main import match_registration_participant_files
+from .data_processing.LLM_formating.main import open_ai
 
 def login_user(request):
     if request.user.is_authenticated:
@@ -40,62 +42,88 @@ def logout_user(request):
 @login_required(login_url='/login')
 def home(request):
     if request.method == "POST":
-        try:
-            participant_files = request.FILES.getlist('participation_files')
-            del request.FILES['participation_files']
-        except:
-            participant_files = []
+        # OLD CODE START
+        # try:
+        #     participant_files = request.FILES.getlist('participation_files')
+        #     del request.FILES['participation_files']
+        # except:
+        #     participant_files = []
+        #
+        # request_dict = dict(request.FILES)
+        # registration_files = []
+        #
+        # for key in request.FILES.keys():
+        #     for file in request_dict[key]:
+        #         base_name = str(file).split('_')[:2]
+        #         new_file = InMemoryUploadedFile(
+        #             file=file,
+        #             field_name=file.field_name,
+        #             name=f"{base_name[0]}_{base_name[1]}_{key}.csv",
+        #             content_type=file.content_type,
+        #             size=file.size,
+        #             charset=file.charset,
+        #             content_type_extra=file.content_type_extra
+        #
+        #         )
+        #         registration_files.append(new_file)
+        #
+        # participant_dict = {str(participant_file).split('_')[1][:11]: participant_file for participant_file in
+        #                     participant_files}
+        # registration_dict = {}
+        # for f in registration_files:
+        #     id = str(f).split('_')[1]
+        #     registration_dict[id] = f
+        #
+        # keys_to_remove = []
+        # for r_key in registration_dict.keys():
+        #     if r_key not in participant_dict.keys():
+        #         keys_to_remove.append(r_key)
+        #
+        #
+        # for p_key in participant_dict.keys():
+        #     if p_key not in registration_dict.keys():
+        #         keys_to_remove.append(p_key)
+        #
+        # for key in keys_to_remove:
+        #     if (key in registration_dict.keys()):
+        #         registration_dict.pop(key)
+        #     if (key in participant_dict.keys()):
+        #         participant_dict.pop(key)
+        #
+        # for key in registration_dict.keys():
+        #     registration_file = registration_dict[key]
+        #     participant_file = participant_dict[key]
+        #     master_df = data_cleaning(registration_file, participant_file)
+        #     master_to_db(master_df)
+        # OLD CODE END
+        if request.method == "POST":
 
-        request_dict = dict(request.FILES)
-        registration_files = []
-        for key in request.FILES.keys():
-            for file in request_dict[key]:
-                base_name = str(file).split('_')[:2]
-                new_file = InMemoryUploadedFile(
-                    file=file,
-                    field_name=file.field_name,
-                    name=f"{base_name[0]}_{base_name[1]}_{key}.csv",
-                    content_type=file.content_type,
-                    size=file.size,
-                    charset=file.charset,
-                    content_type_extra=file.content_type_extra
+            registration_files = dict(request.FILES).setdefault("registration_files", None)
+            participant_files = dict(request.FILES).setdefault("participant_files", None)
 
-                )
-                registration_files.append(new_file)
+            matched_pairs = match_registration_participant_files(registration_files, participant_files)['matched_pairs']
+            missing_files = match_registration_participant_files(registration_files, participant_files)['missing_files']
 
-        participant_dict = {str(participant_file).split('_')[1][:11]: participant_file for participant_file in
-                            participant_files}
-        registration_dict = {}
-        for f in registration_files:
-            id = str(f).split('_')[1]
-            registration_dict[id] = f
+            ai_models = AiModel.objects.all()
 
-        keys_to_remove = []
-        for r_key in registration_dict.keys():
-            if r_key not in participant_dict.keys():
-                keys_to_remove.append(r_key)
+            for reg, part in matched_pairs:
+                for model_config in ai_models:
+                    open_ai(reg, part, model_config)
+                    print("-------------------------------------------------------------------------" + '\n')
 
 
-        for p_key in participant_dict.keys():
-            if p_key not in registration_dict.keys():
-                keys_to_remove.append(p_key)
 
-        for key in keys_to_remove:
-            if (key in registration_dict.keys()):
-                registration_dict.pop(key)
-            if (key in participant_dict.keys()):
-                participant_dict.pop(key)
 
-        for key in registration_dict.keys():
-            registration_file = registration_dict[key]
-            participant_file = participant_dict[key]
-            master_df = data_cleaning(registration_file, participant_file)
-            master_to_db(master_df)
+
+
+
+
 
     data = MasterDB.objects.all().values(
         'topic', 'event_date', 'first_name', 'last_name', 'email', 'registration_time', 'join_time', 'leave_time',
         'duration', 'attended'
     )
+
 
     data_json = json.dumps(list(data))
     excludedEmailsDB = json.dumps(list(ExcludedIndividual.objects.all().values('email')))
@@ -122,8 +150,6 @@ def comparison(request):
 
 @login_required(login_url='/login')
 def visualization(request):
-
-
     token = jwt.encode(
         {
             "iss": "40fe3bd6-b149-40eb-a4e3-a9bdcf710a5b",
