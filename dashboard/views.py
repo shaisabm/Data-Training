@@ -3,16 +3,13 @@ import datetime
 import os
 import uuid
 import jwt
-import re
+
 from django.shortcuts import render, redirect
 from .models import ExcludedIndividual, MasterDB, AiModel
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .data_processing.processing_file import data_cleaning
-from .master_to_db.master_to_db import master_to_db
-from django.core.files.uploadedfile import InMemoryUploadedFile
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .spreadsheet_processing.main import match_registration_participant_files
@@ -40,10 +37,27 @@ def logout_user(request):
     return redirect('login')
 
 
+
+
+from celery import shared_task
+from django.conf import settings
+
+@shared_task
+def process_ai_models_async(matched_pairs, ai_models, model_config):
+    for reg, part in matched_pairs:
+        for model in ai_models:
+            try:
+                open_ai(reg, part, model, model_config)
+                print("Succeed", reg)
+                break
+            except Exception as e:
+                print(f"Failed: {reg} - {str(e)}")
+                continue
+
+
 @login_required(login_url='/login')
 def home(request):
 
-    if request.method == "POST":
         # OLD CODE START
         # try:
         #     participant_files = request.FILES.getlist('participation_files')
@@ -99,22 +113,28 @@ def home(request):
         #     master_to_db(master_df)
         # OLD CODE END
 
-        if request.method == "POST":
+    if request.method == "POST":
 
-            registration_files = dict(request.FILES).setdefault("registration_files", None)
-            participant_files = dict(request.FILES).setdefault("participant_files", None)
+        registration_files = dict(request.FILES).setdefault("registration_files", None)
+        participant_files = dict(request.FILES).setdefault("participant_files", None)
 
-            matched_pairs = match_registration_participant_files(registration_files, participant_files)['matched_pairs']
-            missing_files = match_registration_participant_files(registration_files, participant_files)['missing_files']
+        matched_pairs = match_registration_participant_files(registration_files, participant_files)['matched_pairs']
+        missing_files = match_registration_participant_files(registration_files, participant_files)['missing_files']
 
-            ai_models = AiModel.objects.all()
+        ai_models = AiModel.objects.all()
+        model_config = AiModel.get_defaults()
 
-            for reg, part in matched_pairs:
-                for model_config in ai_models:
-                    open_ai(reg, part, model_config)
-                    print("-------------------------------------------------------------------------" + '\n')
+        process_ai_models_async.delay(matched_pairs, ai_models, model_config)
 
-
+        # for reg, part in matched_pairs:
+        #     for model in ai_models:
+        #         try:
+        #             open_ai(reg, part, model, model_config)
+        #             print("Succeed", reg)
+        #             break
+        #         except Exception as e:
+        #             print(f"Failed: {reg} - {str(e)}")
+        #             continue
 
 
     data = MasterDB.objects.all().values(
