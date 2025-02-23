@@ -1,5 +1,7 @@
 from django.db import models
 import json
+import os
+
 
 # Create your models here.
 
@@ -31,13 +33,39 @@ class ExcludedIndividual(models.Model):
         return self.email
 
 
+
+class DefaultAiConfig(models.Model):
+    api_key = models.CharField(max_length=200, blank=True, null=True)
+    base_url = models.CharField(max_length=100, blank=True, null=True)
+    system_instructions = models.TextField(blank=True, null=True)
+
+
+    def save(self, *args, **kwargs):
+        if type(self).objects.exists() and self.pk:
+            raise ValueError("Only one AI configuration instance is allowed")
+        super().save(*args, **kwargs)
+
+
+
+
 class AiModel(models.Model):
-    ai_model = models.CharField(null=True , max_length=50)
-    api_key = models.CharField(max_length=200)
-    base_url = models.CharField(max_length=100)
-    system_instructions = models.TextField()
+    ai_model = models.CharField(null=True, max_length=50)
+
+    @classmethod
+    def get_defaults(cls):
+        if not DefaultAiConfig.objects.exists():
+            raise ValueError("No default configurations found. Please create a default config instance.")
+        default_instance = DefaultAiConfig.objects.filter().first()
+        return {'api_key': default_instance.api_key,
+                'base_url': default_instance.base_url,
+                'system_instructions': default_instance.system_instructions}
+
+
 
     def __str__(self):
         return str(self.ai_model)
+
+
+
 
 
