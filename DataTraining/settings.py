@@ -76,36 +76,36 @@ WSGI_APPLICATION = 'DataTraining.wsgi.app'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
-#
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'data-training',
-#         'USER': 'postgres',
-#         'PASSWORD': os.getenv('POSTGRES_DB_PASS'),
-#         'HOST': '127.0.0.1',
-#         'PORT': '5432',
-#
-#     }
-# }
 
 DATABASES = {
     'default': {
-
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'data_training',
+        'USER': 'postgres',
+        'PASSWORD': os.getenv('POSTGRES_DB_PASS'),
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
 
-       'NAME': "defaultdb2",
-
-       'USER': "avnadmin",
-
-       'PASSWORD': os.getenv('PASSWORD'),
-
-       'HOST':  os.getenv('HOST'),
-
-       'PORT': os.getenv('PORT'),
-
-   }
+    }
 }
+#
+# DATABASES = {
+#     'default': {
+#
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#
+#        'NAME': "defaultdb2",
+#
+#        'USER': "avnadmin",
+#
+#        'PASSWORD': os.getenv('PASSWORD'),
+#
+#        'HOST':  os.getenv('HOST'),
+#
+#        'PORT': os.getenv('PORT'),
+#
+#    }
+# }
 
 # DATABASES = {
 #      'default': {
@@ -162,10 +162,6 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 
 
-
-MEDIA_ROOT = [
-    os.path.join(BASE_DIR, 'media')
-]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Default primary key field type
@@ -173,3 +169,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True

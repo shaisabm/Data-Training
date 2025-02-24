@@ -13,7 +13,7 @@ from django.contrib import messages
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .spreadsheet_processing.main import match_registration_participant_files
-from .data_processing.LLM_formating.main import open_ai
+from .spreadsheet_processing.tasks import process_ai_models_async, save_uploaded_file
 
 def login_user(request):
     if request.user.is_authenticated:
@@ -37,22 +37,6 @@ def logout_user(request):
     return redirect('login')
 
 
-
-
-from celery import shared_task
-from django.conf import settings
-
-@shared_task
-def process_ai_models_async(matched_pairs, ai_models, model_config):
-    for reg, part in matched_pairs:
-        for model in ai_models:
-            try:
-                open_ai(reg, part, model, model_config)
-                print("Succeed", reg)
-                break
-            except Exception as e:
-                print(f"Failed: {reg} - {str(e)}")
-                continue
 
 
 @login_required(login_url='/login')
@@ -113,6 +97,7 @@ def home(request):
         #     master_to_db(master_df)
         # OLD CODE END
 
+
     if request.method == "POST":
 
         registration_files = dict(request.FILES).setdefault("registration_files", None)
@@ -120,21 +105,22 @@ def home(request):
 
         matched_pairs = match_registration_participant_files(registration_files, participant_files)['matched_pairs']
         missing_files = match_registration_participant_files(registration_files, participant_files)['missing_files']
+        # [[r, p], [r, p], [r, p]]
 
-        ai_models = AiModel.objects.all()
+        for i in range(len(matched_pairs)):
+            pair = matched_pairs[i]
+            reg_path = save_uploaded_file(pair[0])
+            part_path = save_uploaded_file(pair[1])
+            matched_pairs[i] = (reg_path, part_path)
+
+
+
+        ai_models_ids = list(AiModel.objects.all().values_list('id', flat=True))
         model_config = AiModel.get_defaults()
 
-        process_ai_models_async.delay(matched_pairs, ai_models, model_config)
+        process_ai_models_async.delay(matched_pairs, ai_models_ids, model_config)
 
-        # for reg, part in matched_pairs:
-        #     for model in ai_models:
-        #         try:
-        #             open_ai(reg, part, model, model_config)
-        #             print("Succeed", reg)
-        #             break
-        #         except Exception as e:
-        #             print(f"Failed: {reg} - {str(e)}")
-        #             continue
+
 
 
     data = MasterDB.objects.all().values(
