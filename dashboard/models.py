@@ -41,7 +41,7 @@ class DefaultAiConfig(models.Model):
 
 
     def save(self, *args, **kwargs):
-        if type(self).objects.exists() and self.pk:
+        if type(self).objects.exists() and not self.pk:
             raise ValueError("Only one AI configuration instance is allowed")
         super().save(*args, **kwargs)
 
