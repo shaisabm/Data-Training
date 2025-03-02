@@ -15,6 +15,7 @@ print(f'Base {BASE_DIR}')
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
 
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -64,8 +65,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'wsgi.application'
-
+WSGI_APPLICATION = 'DataTraining.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -86,26 +86,8 @@ WSGI_APPLICATION = 'wsgi.application'
 #         'HOST': '127.0.0.1',
 #         'PORT': '5432',
 #
-#     }
+#    }
 # }
-#
-DATABASES = {
-    'default': {
-
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-
-       'NAME': "data-training",
-
-       'USER': "avnadmin",
-
-       'PASSWORD': os.getenv('PASSWORD'),
-
-       'HOST':  os.getenv('HOST'),
-
-       'PORT': os.getenv('PORT'),
-
-   }
-}
 
 # DATABASES = {
 #      'default': {
