@@ -18,11 +18,14 @@ def open_ai(registration, participants, model, model_config):
         base_url=model_config['base_url']
     )
 
-    df_registration = pd.read_csv(registration)
-    registration_content = df_registration.to_string()
+    # df_registration = pd.read_csv(registration)
+    # registration_content = df_registration.to_string()
+    registration_content = registration
 
-    df_participants = pd.read_csv(participants)
-    participants_content = df_participants.to_string()
+
+    # df_participants = pd.read_csv(participants)
+    # participants_content = df_participants.to_string()
+    participants_content = participants
 
     completion = client.chat.completions.create(
 
@@ -40,6 +43,8 @@ def open_ai(registration, participants, model, model_config):
     )
 
     return  completion.choices[0].message.content
+
+
 
 
 system_instructions = """You are a data formatting assistant. Your task is to convert input data into a specific JSON format.
