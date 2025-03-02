@@ -74,37 +74,37 @@ WSGI_APPLICATION = 'DataTraining.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# if not DEBUG:
+if not DEBUG:
 
-DATABASES = {
-    'default': {
+    DATABASES = {
+        'default': {
 
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
-        'NAME': "data-training",
+            'NAME': "data-training",
 
-        'USER': "avnadmin",
+            'USER': "avnadmin",
 
-        'PASSWORD': os.getenv('PASSWORD'),
+            'PASSWORD': os.getenv('PASSWORD'),
 
-        'HOST': os.getenv('HOST'),
+            'HOST': os.getenv('HOST'),
 
-        'PORT': os.getenv('PORT'),
+            'PORT': os.getenv('PORT'),
 
+        }
     }
-}
-# else:
-#     DATABASES = {
-#         'default': {
-#             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#             'NAME': 'data_training',
-#             'USER': 'postgres',
-#             'PASSWORD': os.getenv('POSTGRES_DB_PASS'),
-#             'HOST': '127.0.0.1',
-#             'PORT': '5432',
-#
-#         }
-#     }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'data_training',
+            'USER': 'postgres',
+            'PASSWORD': os.getenv('POSTGRES_DB_PASS'),
+            'HOST': '127.0.0.1',
+            'PORT': '5432',
+
+        }
+    }
 
 # DATABASES = {
 #     'default': {
