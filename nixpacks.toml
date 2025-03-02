@@ -1,2 +1,6 @@
 [phases.setup]
-nixPkgs = ["python312", "python312Packages.pkgutil-resolve-name"]
+nixPkgs = ["python311", "python311Packages.pip", "postgresql"]
+aptPkgs = ["python3-dev"]
+
+[phases.install]
+cmds = ["python -m venv /opt/venv && . /opt/venv/bin/activate && pip install -r requirements.txt"]
