@@ -20,6 +20,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = True
 
 ALLOWED_HOSTS = ['data-training-production.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://data-training-production.up.railway.app']
 
 
 # Application definition
