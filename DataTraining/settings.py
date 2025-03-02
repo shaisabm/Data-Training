@@ -13,14 +13,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
-# PRODUCTION = os.getenv('PRODUCTION', 'False').lower() in ('true', 't', '1', 'yes')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['data-training-production.up.railway.app']
-CSRF_TRUSTED_ORIGINS = ['https://data-training-production.up.railway.app']
+if DEBUG:
+    ALLOWED_HOSTS = ['127.0.0.1']
+else:
+    ALLOWED_HOSTS = ['data-training-production.up.railway.app']
+    CSRF_TRUSTED_ORIGINS = ['https://data-training-production.up.railway.app']
 
 
 # Application definition
@@ -72,35 +74,37 @@ WSGI_APPLICATION = 'DataTraining.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+if not DEBUG:
 
-DATABASES = {
-    'default': {
+    DATABASES = {
+        'default': {
 
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
-        'NAME': "data-training",
+            'NAME': "data-training",
 
-        'USER': "avnadmin",
+            'USER': "avnadmin",
 
-        'PASSWORD': os.getenv('PASSWORD'),
+            'PASSWORD': os.getenv('PASSWORD'),
 
-        'HOST': os.getenv('HOST'),
+            'HOST': os.getenv('HOST'),
 
-        'PORT': os.getenv('PORT'),
+            'PORT': os.getenv('PORT'),
 
+        }
     }
-}
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'data_training',
-#         'USER': 'postgres',
-#         'PASSWORD': os.getenv('POSTGRES_DB_PASS'),
-#         'HOST': '127.0.0.1',
-#         'PORT': '5432',
-#
-#     }
-# }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'data_training',
+            'USER': 'postgres',
+            'PASSWORD': os.getenv('POSTGRES_DB_PASS'),
+            'HOST': '127.0.0.1',
+            'PORT': '5432',
+
+        }
+    }
 
 # DATABASES = {
 #     'default': {
@@ -171,6 +175,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+if not DEBUG:
+    CELERY_BROKER_URL = os.getenv('REDIS_URL')
+else:
+    CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
