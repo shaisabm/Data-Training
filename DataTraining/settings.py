@@ -19,7 +19,7 @@ PRODUCTION = os.getenv('PRODUCTION', 'False').lower() in ('true', 't', '1', 'yes
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['https://data-training-production.up.railway.app']
 
 
 # Application definition
