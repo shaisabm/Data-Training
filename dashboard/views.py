@@ -1,7 +1,10 @@
+import base64
 import json
 import datetime
 import os
 import uuid
+from encodings.base64_codec import base64_encode
+
 import jwt
 
 from django.shortcuts import render, redirect
@@ -13,7 +16,7 @@ from django.contrib import messages
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .spreadsheet_processing.main import match_registration_participant_files
-from .spreadsheet_processing.tasks import process_ai_models_async, save_uploaded_file
+from .spreadsheet_processing.tasks import process_ai_models_async, save_uploaded_file, save_for_celery
 
 def login_user(request):
     if request.user.is_authenticated:
@@ -105,14 +108,19 @@ def home(request):
 
         matched_pairs = match_registration_participant_files(registration_files, participant_files)['matched_pairs']
         missing_files = match_registration_participant_files(registration_files, participant_files)['missing_files']
-        # [[r, p], [r, p], [r, p]]
+        n = len(matched_pairs)
 
-        for i in range(len(matched_pairs)):
+        # for i in range(n):
+        #     pair = matched_pairs[i]
+        #     reg_path = save_uploaded_file(pair[0])
+        #     part_path = save_uploaded_file(pair[1])
+        #     matched_pairs[i] = (reg_path, part_path)
+
+        for i in range(n):
             pair = matched_pairs[i]
-            reg_path = save_uploaded_file(pair[0])
-            part_path = save_uploaded_file(pair[1])
-            matched_pairs[i] = (reg_path, part_path)
-
+            reg_data = save_for_celery(pair[0])
+            part_data = save_for_celery(pair[1])
+            matched_pairs[i] = (reg_data, part_data)
 
 
         ai_models_ids = list(AiModel.objects.all().values_list('id', flat=True))
