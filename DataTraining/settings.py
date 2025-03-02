@@ -89,34 +89,34 @@ WSGI_APPLICATION = 'DataTraining.wsgi.app'
 #     }
 # }
 #
-DATABASES = {
-    'default': {
-
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-
-       'NAME': "defaultdb2",
-
-       'USER': "avnadmin",
-
-       'PASSWORD': os.getenv('PASSWORD'),
-
-       'HOST':  os.getenv('HOST'),
-
-       'PORT': os.getenv('PORT'),
-
-   }
-}
-
 # DATABASES = {
-#      'default': {
-#          'ENGINE': 'django.db.backends.mysql',
-#          'NAME': 'defaultdb',
-#          'USER': 'avnadmin',
-#          'PASSWORD': os.getenv('MYSQL_PASSWORD'),
-#          'HOST': os.getenv('MYSQL_HOST'),
-#          'PORT': os.getenv('MYSQL_PORT'),
-#      }
-#  }
+#     'default': {
+#
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#
+#        'NAME': "defaultdb2",
+#
+#        'USER': "avnadmin",
+#
+#        'PASSWORD': os.getenv('PASSWORD'),
+#
+#        'HOST':  os.getenv('HOST'),
+#
+#        'PORT': os.getenv('PORT'),
+#
+#    }
+# }
+
+DATABASES = {
+     'default': {
+         'ENGINE': 'django.db.backends.mysql',
+         'NAME': 'defaultdb',
+         'USER': 'avnadmin',
+         'PASSWORD': os.getenv('MYSQL_PASSWORD'),
+         'HOST': os.getenv('MYSQL_HOST'),
+         'PORT': os.getenv('MYSQL_PORT'),
+     }
+ }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
