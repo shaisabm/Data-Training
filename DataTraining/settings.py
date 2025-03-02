@@ -64,7 +64,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'DataTraining.wsgi.app'
+WSGI_APPLICATION = 'wsgi.application'
 
 
 # Database
