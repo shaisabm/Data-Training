@@ -6,7 +6,6 @@ import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-print(f'Base {BASE_DIR}')
 
 
 # Quick-start development settings - unsuitable for production
@@ -14,6 +13,7 @@ print(f'Base {BASE_DIR}')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
+PRODUCTION = os.getenv('PRODUCTION', 'False').lower() in ('true', 't', '1', 'yes')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -67,27 +67,48 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'DataTraining.wsgi.application'
 
+
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+if PRODUCTION:
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+    DATABASES = {
+        'default': {
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'data_training',
-#         'USER': 'postgres',
-#         'PASSWORD': os.getenv('POSTGRES_DB_PASS'),
-#         'HOST': '127.0.0.1',
-#         'PORT': '5432',
-#
-#    }
-# }
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+
+            'NAME': "data-training",
+
+            'USER': "avnadmin",
+
+            'PASSWORD': os.getenv('PASSWORD'),
+
+            'HOST': os.getenv('HOST'),
+
+            'PORT': os.getenv('PORT'),
+
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'data_training',
+            'USER': 'postgres',
+            'PASSWORD': os.getenv('POSTGRES_DB_PASS'),
+            'HOST': '127.0.0.1',
+            'PORT': '5432',
+
+        }
+    }
+
+
 
 # DATABASES = {
 #      'default': {
