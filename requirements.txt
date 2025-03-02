@@ -19,4 +19,4 @@ djangorestframework
 pyjwt
 openai
 redis
-celery
+gunicorn
