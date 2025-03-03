@@ -4,22 +4,17 @@ load_dotenv()
 from pathlib import Path
 import os
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
 
+IN_DOCKER = os.getenv('DOCKER_CONTAINER', False)
+IN_PRODUCTION = os.getenv('IN_PRODUCTION', False)
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = IN_PRODUCTION
 
-if DEBUG:
-    ALLOWED_HOSTS = ['127.0.0.1']
+if not IN_PRODUCTION:
+    ALLOWED_HOSTS = ['*']
 else:
     ALLOWED_HOSTS = ['data-training-production.up.railway.app']
     CSRF_TRUSTED_ORIGINS = ['https://data-training-production.up.railway.app']
@@ -74,7 +69,7 @@ WSGI_APPLICATION = 'DataTraining.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-if not DEBUG:
+if IN_PRODUCTION or IN_DOCKER:
 
     DATABASES = {
         'default': {
@@ -175,7 +170,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-if not DEBUG:
+if IN_PRODUCTION:
     CELERY_BROKER_URL = os.getenv('REDIS_URL')
 else:
     CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
