@@ -3,8 +3,6 @@ import json
 import datetime
 import os
 import uuid
-from encodings.base64_codec import base64_encode
-
 import jwt
 
 from django.shortcuts import render, redirect
@@ -16,7 +14,7 @@ from django.contrib import messages
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .spreadsheet_processing.main import match_registration_participant_files
-from .spreadsheet_processing.tasks import process_ai_models_async, save_uploaded_file, save_for_celery
+from .spreadsheet_processing.celery_worker import process_ai_models_async, save_for_celery
 
 def login_user(request):
     if request.user.is_authenticated:
@@ -110,11 +108,6 @@ def home(request):
         missing_files = match_registration_participant_files(registration_files, participant_files)['missing_files']
         n = len(matched_pairs)
 
-        # for i in range(n):
-        #     pair = matched_pairs[i]
-        #     reg_path = save_uploaded_file(pair[0])
-        #     part_path = save_uploaded_file(pair[1])
-        #     matched_pairs[i] = (reg_path, part_path)
 
         for i in range(n):
             pair = matched_pairs[i]

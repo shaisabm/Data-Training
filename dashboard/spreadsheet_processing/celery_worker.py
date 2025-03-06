@@ -19,11 +19,11 @@ def process_ai_models_async(matched_pairs, ai_models_ids, model_config):
             part_content = part['content']
             try:
                 result = open_ai(reg_content, part_content, model, model_config)
-                print("Succeed: ", reg)
+                print(f"{model} Succeed: ", reg)
                 print(result)
                 break
             except Exception as e:
-                print(f"Failed: {reg['name']} - {str(e)}")
+                print(f"{model} Failed: {reg['name']} - {str(e)}")
                 continue
 
 
