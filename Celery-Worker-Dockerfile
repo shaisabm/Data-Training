@@ -12,4 +12,3 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /app/
 
-ENTRYPOINT ["celery", "-A", "DataTraining", "worker", "--uid=nobody", "--gid=nogroup"]
