@@ -69,37 +69,24 @@ WSGI_APPLICATION = 'DataTraining.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-if IN_PRODUCTION or IN_DOCKER:
 
-    DATABASES = {
-        'default': {
+DATABASES = {
+    'default': {
 
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
-            'NAME': "data-training",
+        'NAME': os.getenv('POSTGRES_NAME'),
 
-            'USER': "avnadmin",
+        'USER': os.getenv('POSTGRES_USER'),
 
-            'PASSWORD': os.getenv('PASSWORD'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
 
-            'HOST': os.getenv('HOST'),
+        'HOST': os.getenv('POSTGRES_HOST'),
 
-            'PORT': os.getenv('PORT'),
+        'PORT': os.getenv('POSTGRES_PORT'),
 
-        }
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'data_training',
-            'USER': 'postgres',
-            'PASSWORD': os.getenv('POSTGRES_DB_PASS'),
-            'HOST': '127.0.0.1',
-            'PORT': '5432',
-
-        }
-    }
+}
 
 # DATABASES = {
 #     'default': {

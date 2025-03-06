@@ -11,6 +11,7 @@ def process_ai_models_async(matched_pairs, ai_models_ids, model_config):
     print("Celery is running")
     ai_models = AiModel.objects.filter(id__in=ai_models_ids)
 
+
     for reg, part in matched_pairs:
 
         for model in ai_models:
