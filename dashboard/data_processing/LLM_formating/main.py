@@ -1,7 +1,5 @@
 from openai import OpenAI
-import pandas as pd
-import os
-import time
+
 
 
 def open_ai(registration, participants, model, default_model_config):
@@ -10,11 +8,8 @@ def open_ai(registration, participants, model, default_model_config):
         base_url=default_model_config.base_url
     )
 
-    registration_content = registration
-    print(registration_content)
-
-    participants_content = participants
-
+    registration_content = registration.read()
+    participants_content = participants.read()
     completion = client.chat.completions.create(
 
         model=model.ai_model,
