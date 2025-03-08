@@ -1,15 +1,5 @@
 {% extends 'base.html' %}
 {% block contain %}
 
-    <script type='module'
-            src='https://us-east-1.online.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js'></script>
-
-    <div style=" display: flex; justify-content: center;">
-    <tableau-viz id='tableau-viz'
-                 token="{{ token }}"
-                 src='https://us-east-1.online.tableau.com/t/smistr06-ac0750b6c8/views/Book2_Analytics_New_data/Dashboard'
-                 width='1580' height='1440' toolbar='bottom'></tableau-viz>
-
-    </div>
 
 {% endblock contain %}
