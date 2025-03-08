@@ -23,9 +23,9 @@ def master_to_db(master_df):
             first_name = row['first name'],
             last_name = row['last name'],
             email = row['email'],
-            registration_time = row['registration time'],
+            # registration_time = row['registration time'],
             join_time = row['join time'],
             leave_time = row['leave time'],
-            duration = duration,
+            duration = duration['duration'],
             attended = row['attended']
         )
