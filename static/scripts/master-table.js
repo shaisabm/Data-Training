@@ -5,11 +5,11 @@ const masterTable = document.getElementById("master-table");
 const data = data_json.map(item => {
     return [
         item.topic,
+        item.zoom_id,
         item.event_date,
         item.first_name,
         item.last_name,
         item.email,
-        item.registration_time,
         item.join_time,
         item.leave_time,
         item.duration,
@@ -22,14 +22,14 @@ new Handsontable(masterTable, {
     data,
     height: 750,
 
-    colWidths: [350, 130, 130, 130, 130, 150, 130, 130, 130, 130],
+    colWidths: [350, 100, 130, 130, 130, 130, 130, 170, 170, 100, 100],
     colHeaders: [
         "Topic",
+        "Zoom_id",
         "Event Date",
         "First Name",
         "Last Name",
         "Email",
-        "Registration Time",
         "Join Time",
         "Leave Time",
         'Duration',
@@ -37,15 +37,15 @@ new Handsontable(masterTable, {
     ],
     columns: [
         {data: 0, type: "text"},// Topic
-        {data: 1, type: "text", dateFormat: 'MM-DD-YYYY'}, // Event Date
-        {data: 2, type: "text"}, // First Name
-        {data: 3, type: "text"}, // Last Name
-        {data: 4, type: "text"}, // Email
-        {data: 5, type: "date", dateFormat: 'MM-DD-YYYY'}, // Registration Time
+        {data: 1, type: "numeric"},// Zoom_id
+        {data: 2, type: "text", dateFormat: 'MM-DD-YYYY'}, // Event Date
+        {data: 3, type: "text"}, // First Name
+        {data: 4, type: "text"}, // Last Name
+        {data: 5, type: "text"}, // Email
         {data: 6, type: "text"}, // Join Time
         {data: 7, type: "text"}, // Leave Time
         {data: 8, type: "numeric"}, // Duration
-        {data: 9, type: "text"}, // Attended
+        {data: 9, type: "text"}, //
     ],
     dropdownMenu: true,
     hiddenColumns: {
