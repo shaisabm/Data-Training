@@ -1,13 +1,11 @@
-import base64
 import json
 import datetime
 import os
 import uuid
 import jwt
-
 from django.shortcuts import render, redirect
 from .models import ExcludedIndividual, MasterDB, AiModel
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -106,8 +104,8 @@ def home(request):
 
         matched_pairs = match_registration_participant_files(registration_files, participant_files)['matched_pairs']
         missing_files = match_registration_participant_files(registration_files, participant_files)['missing_files']
-        n = len(matched_pairs)
 
+        n = len(matched_pairs)
 
         for i in range(n):
             pair = matched_pairs[i]
@@ -115,17 +113,11 @@ def home(request):
             part_data = save_for_celery(pair[1])
             matched_pairs[i] = (reg_data, part_data)
 
-
-        ai_models_ids = list(AiModel.objects.all().values_list('id', flat=True))
-        model_config = AiModel.get_defaults()
-
-        process_ai_models_async.delay(matched_pairs, ai_models_ids, model_config)
-
-
+        # process_ai_models_async.delay(matched_pairs)
 
 
     data = MasterDB.objects.all().values(
-        'topic', 'event_date', 'first_name', 'last_name', 'email', 'registration_time', 'join_time', 'leave_time',
+        'topic','zoom_id', 'event_date', 'first_name', 'last_name', 'email', 'join_time', 'leave_time',
         'duration', 'attended'
     )
 
@@ -155,30 +147,8 @@ def comparison(request):
 
 @login_required(login_url='/login')
 def visualization(request):
-    token = jwt.encode(
-        {
-            "iss": os.getenv('iss'),
-            "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=10),
-            "jti": str(uuid.uuid4()),
-            "aud": "tableau",
-            "sub": os.getenv('sub'),
-            "scp": ["tableau:views:embed"]
-            ,
-            "Region": "East"
 
-        },
-        os.getenv('secret'),
-        algorithm="HS256",
-        headers={
-            'kid': os.getenv('kid'),
-            'iss': os.getenv('iss')
-        }
-    )
-
-
-    contexts = {"token": token}
-
-    return render(request, 'dashboard/visualization.html', context=contexts)
+    return render(request, 'dashboard/visualization.html')
 
 
 @api_view(['POST'])
