@@ -1,5 +1,7 @@
 import json
+import os.path
 import re
+
 
 from dashboard.data_processing.LLM_formating.main import open_ai
 from dashboard.models import AiModel, DefaultAiConfig, MasterDB
@@ -22,30 +24,37 @@ def process_ai_models_async(matched_pairs):
     for i, (reg, part) in enumerate(matched_pairs):
 
         for model in ai_models:
-            reg_content = reg['content']
-            part_content = part['content']
-            try:
-                response = open_ai(reg_content, part_content, model, default_model_config)
-                if response is None:
-                    print(f"No response from {model}. Trying next the model if available.")
+            with open(reg, 'r') as reg_content, open(part, 'r') as part_content:
+
+                try:
+                    response = open_ai(reg_content, part_content, model, default_model_config)
+                    if response is None:
+                        print(f"No response from {model}. Trying next the model if available.")
+                        continue
+                    print(f"Received response from {model}")
+                    save_event_data(response, default_model_config, i, pair_to_process)
+                    break
+                except Exception as e:
+                    print(f"{model} Failed: {reg['name']} - {str(e)}")
                     continue
-                print(f"Received response from {model}")
-                save_event_data(response, default_model_config, i, pair_to_process)
-                break
-            except Exception as e:
-                print(f"{model} Failed: {reg['name']} - {str(e)}")
-                continue
+                finally:
+                    os.remove(reg)
+                    os.remove(part)
+
 
 
 def save_for_celery(file):
-    default_storage.save(f'temp/{file.name}', ContentFile(file.read()))
 
-    file_content = base64.b64encode(file.read()).decode('utf-8')
-    return {
-        "name": file.name,
-        "content": file_content,
-        "content_type": file.content_type
-    }
+    path = default_storage.save(f'temp/{file.name}', ContentFile(file.read()))
+    full_path = default_storage.path(path)
+    return full_path
+
+    # file_content = base64.b64encode(file.read()).decode('utf-8')
+    # return {
+    #     "name": file.name,
+    #     "content": file_content,
+    #     "content_type": file.content_type
+    # }
 
 
 def save_event_data(response, default_model_config, i, pair_to_process):
