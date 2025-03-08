@@ -1,10 +1,10 @@
 import pandas as pd
 from io import StringIO
-import calendar
 import os
-from datetime import datetime
+import re
 
 def data_cleaning(registration_file, participant_file):
+    # os.makedirs(folders['master_file'], exist_ok=True)
 
     def standardize_columns(data):
         data.columns = data.columns.str.lower()
@@ -38,15 +38,9 @@ def data_cleaning(registration_file, participant_file):
             if len(split_line) >= 2 and split_line[1].strip().replace(" ", "").isdigit():
                 topic = split_line[0].strip()
                 topic_id = split_line[1].strip()
-                scheduled_time = split_line[2].strip().replace('"', '') #[:10] if len(split_line) > 2 else ""
-                dt = datetime.strptime(scheduled_time,'%m/%d/%Y %H:%M')
-
-                date_str = dt.strftime('%m/%d/%Y')
-                time_str = dt.strftime('%I:%M %p')
-                month_str = dt.strftime('%B')
-
-                topic_data.append([topic, topic_id, month_str, date_str, time_str])
-        topic_df = pd.DataFrame(topic_data, columns=["topic", "id", "event month", "event date", "event time"])
+                scheduled_time = split_line[2].strip().replace('"', '')[:10] if len(split_line) > 2 else ""
+                topic_data.append([topic, topic_id, scheduled_time])
+        topic_df = pd.DataFrame(topic_data, columns=["topic", "id", "event date"])
         return topic_df
 
     def clean_attendee_data(file_content):
@@ -74,16 +68,18 @@ def data_cleaning(registration_file, participant_file):
         return attendee_df
 
     def extract_event_date_from_filename(filename):
-        month = (filename.split('_')[2]).split('.')[0]
-        if month:
-            return calendar.month_name[int(month)]
+        match = re.search(r'registration_\d+_(\d{4})_(\d{2})_(\d{2})', filename)
+        if match:
+            year, month, day = match.groups()
+            return f"{month}/{day}/{year}"
         return ""
 
+
     # Process participant and registration files in-memory
-    participant_data = pd.read_csv(StringIO(participant_file.read().decode('utf-8')))
+    participant_data = pd.read_csv(StringIO(participant_file.read()))
     cleaned_participant_data = clean_participant_data(participant_data)
 
-    registration_content = registration_file.read().decode('utf-8')
+    registration_content = registration_file.read()
     reg_topic_data = extract_precise_topic_id(registration_content)
     cleaned_attendee_data = clean_attendee_data(registration_content)
 
@@ -102,32 +98,59 @@ def data_cleaning(registration_file, participant_file):
         lambda x: 'No' if pd.notnull(x) else 'Yes')
     merged_data.drop(columns=['_merge'], inplace=True)
 
-    for col in ["topic", "id", "event month", "event date", "event time"]:
+    for col in ["topic", "id", "event date"]:
         merged_data[col] = reg_topic_data[col].iloc[0] if col in reg_topic_data else ""
 
-    merged_data["event month"] = event_date
+    merged_data["event date"] = event_date
 
     all_data = [merged_data]
 
     if all_data:
         master_df = pd.concat(all_data, ignore_index=True)
-        master_df = master_df[['topic', 'id', 'event month', 'event date', 'event time', 'first name', 'last name', 'email',
+        master_df = master_df[['topic', 'id', 'event date', 'first name', 'last name', 'email',
                                'registration time', 'approval status', 'join time', 'leave time',
                                'duration', 'guest', 'attended']]
+        master_df['event date'] = pd.to_datetime(master_df['event date'], format='%m/%d/%Y', errors='coerce')
+        master_df = master_df.sort_values(by='event date')
+        master_df['event date'] = master_df['event date'].dt.strftime('%m/%d/%Y')
 
-        # Commented are the lines which were used to convert the date format to 'mm/dd/yyyy'
-        # master_df['event date'] = pd.to_datetime(master_df['event date'], format='%m/%d/%Y', errors='coerce')
-        # master_df = master_df.sort_values(by='event date')
-        # master_df['event date'] = master_df['event date'].dt.strftime('%m/%d/%Y')
-
-        ## TEST -- MUST BE DELETED IN PRODUCTION
-
-        # 6: Save Final Master File
-        # file_path = "/Users/shaisabm/Documents/Django/DataTraining/dashboard/data_processing/data_processing_tests/master"
-        # output_file_path = os.path.join(file_path, 'Master_Attendance_File.csv')
-        # master_df.to_csv(output_file_path, index=False)
-        # print(f"Master file saved: {output_file_path}")
+        code = re.search(r'(\d{11})', registration_file.name).group(1)
+        output_file_path = os.path.join('/Users/shaisabm/Documents/Django/DataTraining/dashboard/data_processing/master', f'{code}.csv')
+        master_df.to_csv(output_file_path, index=False)
+        print(f"Master file saved: {output_file_path}")
 
         return master_df
     else:
         print("No data found to process. Please check input folders.")
+
+
+
+
+# with open('2024 August Training Attendance/87', 'r') as reg, open('2024 August Training Attendance/participants_91296104245.csv') as part:
+#     data_cleaning(reg, part)
+from os import listdir
+from os.path import isfile, join
+
+part = {}
+reg = {}
+
+
+path = "2024 August Training Attendance/"
+
+for f in listdir(path):
+    code = re.search(r'(\d{11})', f).group(1)
+    if "participants" in f:
+        part[code] = f
+    else:
+        reg[code] = f
+
+
+common_code = set(part.keys() & reg.keys())
+
+print(common_code)
+for c in common_code:
+    reg_file = f"2024 August Training Attendance/{reg[c]}"
+    part_file = f"2024 August Training Attendance/{part[c]}"
+    with open(reg_file, 'r') as r, open(part_file) as p:
+        data_cleaning(r, p)
+
