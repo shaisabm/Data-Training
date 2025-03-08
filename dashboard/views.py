@@ -113,7 +113,7 @@ def home(request):
             part_data = save_for_celery(pair[1])
             matched_pairs[i] = (reg_data, part_data)
 
-        # process_ai_models_async.delay(matched_pairs)
+        process_ai_models_async.delay(matched_pairs)
 
 
     data = MasterDB.objects.all().values(
