@@ -24,10 +24,10 @@ def process_ai_models_async(matched_pairs):
     for i, (reg, part) in enumerate(matched_pairs):
 
         for model in ai_models:
-            with open(reg, 'r') as reg_content, open(part, 'r') as part_content:
+            with open(reg, 'r') as reg_file, open(part, 'r') as part_file:
 
                 try:
-                    response = open_ai(reg_content, part_content, model, default_model_config)
+                    response = open_ai(reg_file, part_file, model, default_model_config)
                     if response is None:
                         print(f"No response from {model}. Trying next the model if available.")
                         continue
@@ -35,7 +35,7 @@ def process_ai_models_async(matched_pairs):
                     save_event_data(response, default_model_config, i, pair_to_process)
                     break
                 except Exception as e:
-                    print(f"{model} Failed: {reg['name']} - {str(e)}")
+                    print(f"{model} Failed: {reg_file.name} - {str(e)}")
                     continue
                 finally:
                     os.remove(reg)
@@ -48,13 +48,6 @@ def save_for_celery(file):
     path = default_storage.save(f'temp/{file.name}', ContentFile(file.read()))
     full_path = default_storage.path(path)
     return full_path
-
-    # file_content = base64.b64encode(file.read()).decode('utf-8')
-    # return {
-    #     "name": file.name,
-    #     "content": file_content,
-    #     "content_type": file.content_type
-    # }
 
 
 def save_event_data(response, default_model_config, i, pair_to_process):
@@ -75,7 +68,7 @@ def save_event_data(response, default_model_config, i, pair_to_process):
 
     event_data = data['event']
     participants_data = data['participants']
-    zoom_id = event_data['id']
+    zoom_id = int(event_data['id'])
 
     excluded_emails = ExcludedIndividual.get_all_emails()
 
