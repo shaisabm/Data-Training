@@ -1,10 +1,4 @@
 import json
-import datetime
-import os
-import uuid
-from pathlib import Path
-
-import jwt
 from django.shortcuts import render, redirect
 from .models import ExcludedIndividual, MasterDB, AiModel
 from django.http import HttpResponse
@@ -15,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .spreadsheet_processing.main import match_registration_participant_files
 from .spreadsheet_processing.celery_worker import process_ai_models_async, save_for_celery
-
+from celery import shared_task
 
 def login_user(request):
     if request.user.is_authenticated:
@@ -38,8 +32,8 @@ def logout_user(request):
     print("Logged out successfully")
     return redirect('login')
 
-
 @login_required(login_url='/login')
+@shared_task
 def home(request):
     # OLD CODE START
     # try:
@@ -117,7 +111,6 @@ def home(request):
         'topic', 'zoom_id', 'event_date', 'first_name', 'last_name', 'email', 'join_time', 'leave_time',
         'duration', 'attended'
     )
-
 
     data_json = json.dumps(list(data))
     excluded_emailsDB = json.dumps(list(ExcludedIndividual.objects.all().values('email')))
