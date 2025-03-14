@@ -112,15 +112,13 @@ def home(request):
             part_data = save_for_celery(pair[1])
             matched_pairs[i] = (reg_data, part_data)
 
-        process_ai_models_async.delay(matched_pairs)
+        # process_ai_models_async.delay(matched_pairs)
 
     data = MasterDB.objects.all().values(
         'topic', 'zoom_id', 'event_date', 'first_name', 'last_name', 'email', 'join_time', 'leave_time',
         'duration', 'attended'
     )
 
-    BASE_DIR = Path(__file__).resolve().parent.parent
-    print(BASE_DIR)
 
     data_json = json.dumps(list(data))
     excluded_emailsDB = json.dumps(list(ExcludedIndividual.objects.all().values('email')))
