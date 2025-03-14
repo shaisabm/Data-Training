@@ -2,14 +2,14 @@ from openai import OpenAI
 
 
 
-def open_ai(registration, participants, model, default_model_config):
+def open_router(registration, participants, model, default_model_config):
     client = OpenAI(
         api_key=default_model_config.api_key,
         base_url=default_model_config.base_url
     )
 
-    registration_content = registration.read()
-    participants_content = participants.read()
+    registration_content = registration
+    participants_content = participants
     completion = client.chat.completions.create(
 
         model=model.ai_model,
@@ -26,6 +26,7 @@ def open_ai(registration, participants, model, default_model_config):
     )
 
     return  completion.choices[0].message.content
+
 
 
 
