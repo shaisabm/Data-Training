@@ -47,8 +47,6 @@ def save_for_celery(file):
 
     path = default_storage.save(f'temp/{file.name}', ContentFile(file.read()))
     full_path = default_storage.path(path)
-    print(full_path)
-    os.remove(full_path)
 
     return full_path
 
