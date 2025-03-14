@@ -49,6 +49,7 @@ def save_for_celery(file):
     full_path = default_storage.path(path)
     print(full_path)
     os.remove(full_path)
+
     return full_path
 
 
