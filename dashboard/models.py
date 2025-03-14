@@ -19,6 +19,8 @@ class MasterDB(models.Model):
     duration = models.IntegerField(default=0, null=True, blank=True)
     attended = models.CharField(max_length=100, null=True, blank=True)
 
+    class Meta:
+        unique_together = ['first_name', 'last_name', 'zoom_id', 'email']
 
 class ExcludedIndividual(models.Model):
     email = models.EmailField()
