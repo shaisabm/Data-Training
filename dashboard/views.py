@@ -86,4 +86,8 @@ def visualization(request):
     return render(request, 'dashboard/visualization.html')
 
 
+def test(request):
+
+    return render(request, "dashboard/components/master-table.html")
+
 
