@@ -9,5 +9,6 @@ urlpatterns = [
     path('api/excludedEmails', views.excluded_emails, name='excluded_emails'),
     path('login', views.login_user, name='login'),
     path('logout', views.logout_user, name='logout'),
+    path('test', views.test, name='test'),
 
 ]

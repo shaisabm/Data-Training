@@ -71,10 +71,12 @@ const data = data_json.map(item => {
 let gridApi;
 const gridOptions = {
     rowData: data_json.map(item => {
-        const eventDate = item.event_date ? new Date(item.event_date): null;
+        const eventDate = item.event_date ? new Date(item.event_date) : null;
+        const zoomId = item.zoom_id ? parseInt(item.zoom_id, 10) : null;
+
         return {
             Topic: item.topic,
-            "Zoom ID": item.zoom_id,
+            "Zoom ID": zoomId,
             "Event Date": eventDate,
             "First Name": item.first_name,
             "Last Name": item.last_name,
@@ -92,11 +94,31 @@ const gridOptions = {
         },
         {
             field: "Zoom ID",
-            filter: 'agNumberColumnFilter'
+            filter: 'agNumberColumnFilter',
+            filterParams: {
+                // Ensure values are treated as numbers
+                numberParser: text => {
+                    return text === null || text === undefined || text === '' ? null : parseFloat(text);
+                }
+            }
         },
         {
             field: "Event Date",
-            filter: 'agDateColumnFilter'
+            filter: 'agDateColumnFilter',
+            filterParams: {
+                browserDatePicker: true,
+                comparator: function (filterDate, cellValue) {
+                    if (!cellValue) return -1;
+                    // Extract just the date part for comparison
+                    const cellDate = new Date(cellValue);
+                    if (filterDate.getTime() === cellDate.getTime()) return 0;
+                    if (cellDate < filterDate) return -1;
+                    return 1;
+                },
+
+            },
+
+
         },
         {
             field: "First Name",
@@ -129,7 +151,7 @@ const gridOptions = {
         flex: 1,
         sortable: true,
         // filter: true,
-        // floatingFilter: true
+        floatingFilter: true
     }
 };
 // Create Grid: Create new grid within the #myGrid div, using the Grid Options object
