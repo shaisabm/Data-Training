@@ -71,7 +71,7 @@ def excluded_emails(request):
         emails = body_data.get('emails', [])
         ExcludedIndividual.objects.all().delete()
         for email in emails:
-            ExcludedIndividual.objects.create(email=email)
+            ExcludedIndividual.objects.create(email=email.lower())
         MasterDB.objects.filter(email__in=emails).delete()
         return HttpResponse('Excluded emails updated successfully', status=200)
 
