@@ -115,7 +115,7 @@ def data_cleaning(registration_file, participant_file):
         master_df['event date'] = master_df['event date'].dt.strftime('%m/%d/%Y')
 
         code = re.search(r'(\d{11})', registration_file.name).group(1)
-        output_file_path = os.path.join('/Users/shaisabm/Documents/Django/DataTraining/dashboard/data_processing/master', f'{code}.csv')
+        output_file_path = os.path.join('/dashboard/not_in_use_data_processing/master', f'{code}.csv')
         master_df.to_csv(output_file_path, index=False)
         print(f"Master file saved: {output_file_path}")
 
