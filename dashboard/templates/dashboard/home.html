@@ -2,17 +2,17 @@
 {% block contain %}
     {% include 'sidebar.html' %}
 
-    {% if messages %}
-        {% for message in messages %}
-            <div class="d-flex flex-row justify-content-center">
-                <div class="alert alert-warning alert-dismissible fade show " role="alert">
+    <div class="d-flex flex-row justify-content-center pt-3">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-warning alert-dismissible fade show position-absolute" role="alert">
                     {{ message }}.
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        {% endif %}
+    </div>
 
-    {% endif %}
 
 
     <div class="btn position-sticky start-100 m-2">
@@ -35,8 +35,8 @@
 
     <div class="position-absolute top-10 start-50 translate-middle hidden js-confirm-date-container confirm-date-container"
          style="z-index: 999">
-    <button type="button" class="js-final-submit-btn btn btn-success" style="z-index: 1000">Confirm and Submit
-            </button>
+        <button type="button" class="js-final-submit-btn btn btn-success" style="z-index: 1000">Confirm and Submit
+        </button>
         <form class="js-event-date position-absolute  event-date" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
         </form>
