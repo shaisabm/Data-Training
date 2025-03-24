@@ -11,7 +11,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 IN_DOCKER = os.getenv('DOCKER_CONTAINER', False)
 IN_PRODUCTION = os.getenv('IN_PRODUCTION', False)
 
-DEBUG = IN_PRODUCTION
+DEBUG = True
 
 if not IN_PRODUCTION:
     ALLOWED_HOSTS = ['*']
@@ -23,6 +23,8 @@ else:
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -32,6 +34,7 @@ INSTALLED_APPS = [
     'dashboard',
     'bootstrap5',
     'rest_framework',
+
 ]
 
 MIDDLEWARE = [
@@ -64,6 +67,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'DataTraining.wsgi.application'
+
+ASGI_APPLICATION = "DataTraining.asgi.application"
+
 
 
 # Database
@@ -106,8 +112,6 @@ DATABASES = {
 #      }
 #  }
 
-# Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -157,8 +161,19 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-if IN_PRODUCTION:
-    CELERY_BROKER_URL = os.getenv('REDIS_URL')
-else:
-    CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
+CELERY_BROKER_URL = os.getenv('REDIS_URL') if IN_PRODUCTION else 'redis://127.0.0.1:6379'
+CELERY_RESULT_BACKEND = os.getenv('REDIS_URL') if IN_PRODUCTION else 'redis://127.0.0.1:6379/0'
+
+
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+
+
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [(os.getenv('REDIS_URL') if IN_PRODUCTION else "127.0.0.1", 6379)],
+        },
+    },
+}
