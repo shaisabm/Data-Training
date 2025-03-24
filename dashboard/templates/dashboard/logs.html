@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Test</title>
+</head>
+<body>
+    <h1>WebSocket Messages</h1>
+    <div id="messages"></div>
+
+    <script>
+        const pk = window.location.pathname.split('/')[1];
+        const socket = new WebSocket('ws://' + window.location.host + `/ws/${pk}/test/`);
+        const messagesDiv = document.getElementById('messages');
+
+        socket.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            const p = document.createElement('p');
+            p.textContent = data.message;
+            messagesDiv.appendChild(p);
+            console.log(data.message);
+        };
+    </script>
+</body>
+</html>

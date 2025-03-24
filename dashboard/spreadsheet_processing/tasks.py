@@ -2,11 +2,12 @@ import json
 import re
 from sqlite3 import IntegrityError
 from dashboard.not_in_use_data_processing.LLM_formating.main import open_router
-from dashboard.models import AiModel, DefaultAiConfig, MasterDB
+from dashboard.models import AiModel, MasterDB
 from celery import shared_task
 from jsonschema import validate
 from dashboard.models import ExcludedIndividual
-
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 @shared_task
 def process_ai_models_async(matched_pairs):
@@ -19,6 +20,8 @@ def process_ai_models_async(matched_pairs):
     Args:
         matched_pairs: List of tuples containing (registration_data, participant_data, filename)
     """
+
+    send_log_to_user(1, "Hello from celery")
     print(f"Processing the data! "
           f"{len(matched_pairs)} pairs of spreadsheet to process...")
 
@@ -129,3 +132,19 @@ def save_for_celery(file):
     """
     file_content = file.read()
     return file_content.decode('utf-8')
+
+
+def send_log_to_user(user_id, message):
+
+    """Send a log message to a specific user's WebSocket."""
+    try:
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f"user_{user_id}",  # Use the correct group name format
+            {
+                "type": "celery_log",
+                "message": message
+            }
+        )
+    except Exception as e:
+        print(f"Failed to send log to user {user_id}: {str(e)}")

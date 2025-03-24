@@ -1,4 +1,7 @@
 import json
+
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from django.shortcuts import render, redirect
 from .models import ExcludedIndividual, MasterDB
 from django.http import HttpResponse
@@ -6,7 +9,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .spreadsheet_processing.main import match_reg_part_files
-from .spreadsheet_processing.celery_worker import process_ai_models_async, save_for_celery
+from .spreadsheet_processing.tasks import process_ai_models_async, save_for_celery
+from django.contrib.auth.models import User
 
 
 def login_user(request):
@@ -126,8 +130,14 @@ def visualization(request):
     return render(request, 'dashboard/visualization.html')
 
 
-def test(request):
+def test(request, pk):
     """
     Test endpoint to render the master table component.
     """
-    return render(request, "dashboard/components/master-table.html")
+
+    user = User.objects.filter(pk=pk).first()
+    if user is None or user.pk != request.user.pk:
+        return redirect('login')
+
+
+    return render(request, "dashboard/logs.html", {'pk': pk})
